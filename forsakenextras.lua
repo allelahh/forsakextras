@@ -18,7 +18,7 @@ local SupportedVersion = 9264
 -- like allat needs to be deleted 🙏
 
 -- naaaa it doesnt.... this is totally very readable
--- just Some of The Jokes should tHough..... -allela
+-- just Some of The Jokes should tHough....
 
 local function forsakenextrasLoad()
 	-- roblox services that i dont need and totaly never use
