@@ -13,14 +13,14 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
-local SupportedVersion = 9264
+local SupportedVersion = 9610
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
 -- naaaa it doesnt.... this is totally very readable
--- just Some of The Jokes should tHough....
+-- just Some of The Jokes should tHough..... -allela
 
-local function forsakenextrasLoad()
+local function forsakenqolLoad()
 	-- roblox services that i dont need and totaly never use
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
@@ -106,6 +106,7 @@ local function forsakenextrasLoad()
 	-- sittings
 	local VectoryMultipliery = 2
 	local WantedChrges = 2
+	local lmsmusicvolume = 1
 	local SkibidiDistance = 6
 	local AimLockTimer = 2
 	local AimSmoothnes = 0.1
@@ -123,7 +124,7 @@ local function forsakenextrasLoad()
 	local BabyShark = nil
 	local KillerFartPart = nil
 	local HRP = nil
-	local CurrentSound = "FishBoyPhonk.mp3"
+	local CurrentSound = "mario.mp3"
 	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
 
 	local fart = {
@@ -144,7 +145,7 @@ local function forsakenextrasLoad()
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
-	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
+	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true, Xeno = true }
 
 	task.spawn(function()
 		pcall(function()
@@ -234,30 +235,27 @@ local function forsakenextrasLoad()
 	}
 
 	local MusicList = {
-		--["RottenGirl"] = "RottenGirl.mp3",
-		["CloseToMe"] = "closetome.mp3",
-		["LuisVSPedro"] = "luislms.mp3",
-		["VanityLMSRemake"] = "vanityremake.mp3",
-		--["GrassSkirt"] = "GrassSkirt.mp3", removed because its too short and i didnt check when they uploaded this.
+		
 	}
 
 	local GUI = Rayfield:CreateWindow({
-		Name = "forsakenextras",
+		Name = "forsakenqol",
 		Theme = "Default",
-		LoadingTitle = "Harmless Hub",
-		LoadingSubtitle = "eek!!! oh its just a harmless cat!",
+		LoadingTitle = "forsaken: quality of life",
+		LoadingSubtitle = "I'M TWOTIME AND I'M no longer BORING AS SHIT!",
 		Icon = "microwave",
 		Link = "https://github.com/allelahh/forsakenextras/blob/main/forsakenextras.lua",
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
+		ConfigurationSaving = true,
 
 		--[[KeySystem = false,
 		KeySettings = {
 			Title = "forsakenextras Key System",
 			Subtitle = "im such a meowzer like meow meow",
 			Note = "Copied Link To Clipboard",
-			FileName = "forsakenextrasKey",
+			FileName = "forsakenqolKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
 			Key = { "wherethehuzzat" },
@@ -265,7 +263,7 @@ local function forsakenextrasLoad()
 	})
 
 	local function WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW()
-		local forsakenextrasEmoteGUI = Instance.new("ScreenGui", game:GetService("CoreGui"))
+		local forsakenqolEmoteGUI = Instance.new("ScreenGui", game:GetService("CoreGui"))
 		local Holder = Instance.new("Frame")
 		local UICorner = Instance.new("UICorner")
 		local WhereTheButtons = Instance.new("Frame")
@@ -335,12 +333,12 @@ local function forsakenextrasLoad()
 
 		--Properties:
 
-		forsakenextrasEmoteGUI.Name = "forsakenextrasEmoteGUI"
-		forsakenextrasEmoteGUI.Parent = game:GetService("CoreGui")
-		forsakenextrasEmoteGUI.ResetOnSpawn = false
+		forsakenqolEmoteGUI.Name = "forsakenqolEmoteGUI"
+		forsakenqolEmoteGUI.Parent = game:GetService("CoreGui")
+		forsakenqolEmoteGUI.ResetOnSpawn = false
 
 		Holder.Name = "Holder"
-		Holder.Parent = forsakenextrasEmoteGUI
+		Holder.Parent = forsakenqolEmoteGUI
 		Holder.AnchorPoint = Vector2.new(0.5, 0.5)
 		Holder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		Holder.BackgroundTransparency = 0.250
@@ -1041,7 +1039,7 @@ local function forsakenextrasLoad()
 				tweenblur:Play()
 				tween:Play()
 				task.wait(0.25)
-				forsakenextrasEmoteGUI:Destroy()
+				forsakenqolEmoteGUI:Destroy()
 			end)
 		end
 	end
@@ -1143,6 +1141,7 @@ local function forsakenextrasLoad()
 					if child:IsA("Sound") and child.Name == "LastSurvivor" then
 						child.SoundId = getcustomasset("forsakenextras/Assets/LastStandingMusic/" .. tostring(CurrentSound))
 						child.TimePosition = 0
+						child.Volume = lmsmusicvolume
 					end
 				end)
 				table.insert(MusicConnections, connection)
@@ -1162,13 +1161,21 @@ local function forsakenextrasLoad()
 		end
 	end
 
-	local function ChangeMusic(music)
+	local function ChangeMusic(music, volume)
 		local LastStandingFolder = workspace.Themes
 		if LastStandingFolder then
 			for _, child in ipairs(LastStandingFolder:GetChildren()) do
 				if child:IsA("Sound") and child.Name == "LastSurvivor" then
-					child.SoundId = getcustomasset("forsakenextras/Assets/LastStandingMusic/" .. tostring(music))
-					child.TimePosition = 0
+					if volume then
+						task.spawn(function()
+							while child and task.wait() do
+								child.Volume = lmsmusicvolume
+							end
+						end)
+					else
+						child.SoundId = getcustomasset("forsakenextras/Assets/LastStandingMusic/" .. tostring(music))
+						child.TimePosition = 0
+					end
 				end
 			end
 		end
@@ -1228,7 +1235,7 @@ local function forsakenextrasLoad()
 		end
 	end
 
-	local function Notifyforsakenextrasers(Player)
+	local function Notifyforsakenqolers(Player)
 		local character = Player.Character
 		local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 		local temporaryUI = playerGui:FindFirstChild("TemporaryUI")
@@ -1267,7 +1274,7 @@ local function forsakenextrasLoad()
 						:WaitForChild("Accessibility")
 						:WaitForChild("Pronouns")
 					if Pronouns.Value == "Fart/Hub" then
-						Notifyforsakenextrasers(player)
+						Notifyforsakenqolers(player)
 					end
 				end)
 
@@ -1315,7 +1322,7 @@ local function forsakenextrasLoad()
 			local Lighting = game:GetService("Lighting")
 			local CoreGui = game:GetService("CoreGui")
 
-			local EmoteGUI = CoreGui:FindFirstChild("forsakenextrasEmoteGUI")
+			local EmoteGUI = CoreGui:FindFirstChild("forsakenqolEmoteGUI")
 			local BlurEffect = Lighting:FindFirstChild("Blur")
 
 			if EmoteGUI then
@@ -1411,6 +1418,39 @@ local function forsakenextrasLoad()
 			end
 		end)
 	end
+ 
+	local function updateMusicList()
+		local existingFiles = {}
+			for _, music in ipairs(listfiles("forsakenextras/Assets/LastStandingMusic")) do
+				print(music)
+				if string.find(music, "mp3") then
+					local name = string.gsub(music, "^.*/", "")  -- removes everything up to the last '/'
+					print(name)  --> muisic,mp3
+					if name then
+						existingFiles[name] = true
+						local found = false
+						for _, tablemusic in ipairs(MusicList) do
+							if tablemusic == name then
+								found = true
+								break
+							end
+						end
+						if not found then
+							table.insert(MusicList, name)
+						end
+					end
+				end
+			end
+
+			-- Remove any music from MusicList that's not in existingFiles
+			for i = #MusicList, 1, -1 do
+				if not existingFiles[MusicList[i]] then
+					table.remove(MusicList, i)
+				end
+			end
+	end
+
+	updateMusicList()
 
 	local function CreateFishFrame()
 		local visible = true
@@ -1458,7 +1498,7 @@ local function forsakenextrasLoad()
 			end
 		end)
 	end
-
+	
 	local function InitializeGUI()
 		MiscTab = GUI:CreateTab("Misc", "ghost")
 
@@ -1484,8 +1524,8 @@ local function forsakenextrasLoad()
 			Name = "Delete Gui",
 			CurrentValue = false,
 			Callback = function()
-				if game:GetService("CoreGui"):FindFirstChild("forsakenextrasEmoteGUI") then
-					game:GetService("CoreGui"):FindFirstChild("forsakenextrasEmoteGUI"):Destroy()
+				if game:GetService("CoreGui"):FindFirstChild("forsakenqolEmoteGUI") then
+					game:GetService("CoreGui"):FindFirstChild("forsakenqolEmoteGUI"):Destroy()
 				end
 				wait()
 				local CoreGui = game:GetService("CoreGui")
@@ -1501,7 +1541,7 @@ local function forsakenextrasLoad()
 		local Rejoin = MiscTab:CreateButton({
 			Name = "Rejoin",
 			Callback = function()
-				teleportService:Teleport(game.PlaceId, game.Players.LocalPlayer)	
+				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)	
 			end,
 		})
 
@@ -1512,25 +1552,52 @@ local function forsakenextrasLoad()
 
 		local MusicDropdown = MiscTab:CreateDropdown({
 			Name = "Music List",
-			Options = {
-				"CloseToMe",
-				"LuisVSPedro",
-				"VanityLMSRemake",
-			},
-			CurrentOption = { "CloseToMe" },
-			MultipleOptions = false,
-			Callback = function(Options)
-				CurrentSound = MusicList[Options[1]]
+			Options = MusicList,
+			CurrentOption = "Bonetrousle.mp3",
+			MultiSelection = false,
+			Callback = function(OptionChosen)
+				CurrentSound = OptionChosen[1]
+				print(CurrentSound)
 				if ReplaceStandingMusic then
 					ChangeMusic(CurrentSound)
 				end
 			end,
 		})
-		
+
+		local RefreshButton = MiscTab:CreateButton({
+			Name = "Refresh music list", 
+			Callback = function(keybind)
+				updateMusicList()
+				task.wait()
+				for _, music in ipairs(MusicList) do
+					MusicDropdown:Refresh(MusicList)
+				end
+			end,
+		})
+
+		local VolumeSlider = MiscTab:CreateSlider({
+  			Name = "Music Volume",
+   			Range = {0.1, 10},
+   			Increment = 0.1,
+   			Suffix = "LMSVolume",
+   			CurrentValue = 1,
+   			Flag = "ReplaceLMSVolume", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   			Callback = function(Value)
+				lmsmusicvolume = Value
+
+				if ReplaceStandingMusic then
+					ChangeMusic(CurrentSound, lmsmusicvolume)
+				end
+   			end,
+		})
+
 		local MusicToggle = MiscTab:CreateToggle({
 			Name = "Replace Last Standing Music",
 			CurrentValue = false,
+   			Flag = "ReplaceLMSToggle",
 			Callback = function(state)
+				print(CurrentSound)
+				if CurrentSound == ("???" or "empty" or nil) then return end
 				LastStandingReplacement(state)
 				if ReplaceStandingMusic then
 					ChangeMusic(CurrentSound)
@@ -1550,7 +1617,7 @@ local function forsakenextrasLoad()
 				local Lighting = game:GetService("Lighting")
 				local CoreGui = game:GetService("CoreGui")
 
-				local EmoteGUI = CoreGui:FindFirstChild("forsakenextrasEmoteGUI")
+				local EmoteGUI = CoreGui:FindFirstChild("forsakenqolEmoteGUI")
 				local BlurEffect = Lighting:FindFirstChild("Blur")
 
 				if EmoteGUI then
@@ -1585,7 +1652,7 @@ local function forsakenextrasLoad()
 			end,
 		})
 
-		MiscTab:CreateSection("(its funny and not harmful))")
+		MiscTab:CreateSection("(warning: people might think you're a hacker and report you))")
 
 	end
 
@@ -1631,7 +1698,7 @@ then
 					Text = "Game updated so some features might not work",
 					Duration = 20,
 				})
-				forsakenextrasLoad()
+				forsakenqolLoad()
 			end
 		end
 
@@ -1644,8 +1711,10 @@ then
 			Callback = bindable,
 		})
 	else
-		forsakenextrasLoad()
+		forsakenqolLoad()
 	end
 else
-	forsakenextrasLoad()
+	forsakenqolLoad()
 end
+
+Rayfield:LoadConfiguration()
