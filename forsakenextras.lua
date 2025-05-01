@@ -248,7 +248,7 @@ local function forsakenqolLoad()
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
-		ConfigurationSaving = true,
+		--ConfigurationSaving = true,
 
 		--[[KeySystem = false,
 		KeySettings = {
@@ -1717,4 +1717,4 @@ else
 	forsakenqolLoad()
 end
 
-Rayfield:LoadConfiguration()
+--Rayfield:LoadConfiguration()
