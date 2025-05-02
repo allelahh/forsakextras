@@ -3,8 +3,8 @@
 *the script:*
 ``loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()``
 
-Repo for assets like audios/videos/images for a QoL script for the Roblox game "Forsaken" which gives no advantages;
-and is therefore NOT malicious (i'm serious), and shouldn't need to be removed.
+Repo for assets like audios/videos/images for a **QoL script** for the Roblox game **"Forsaken"** which **gives no advantages**;
+and is therefore **NOT malicious** (i'm serious), and shouldn't need to be removed.
 don't worry github mods, or users
 
 ## additional notes:
