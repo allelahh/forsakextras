@@ -1,3 +1,7 @@
+local DebugNotifications = false
+local TrackMePlease = true --turn this off if you dont want me to know ur username and executor, etc
+--in the future this will log chat too cus why not
+
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
@@ -68,20 +72,19 @@ local function ForsakextrasLoad()
 
 	task.spawn(function()
 		pcall(function()
-			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-			local TrackMePlease = true
-
 			if TrackMePlease == true then
+
+				local PlayerFish = Players.LocalPlayer
+				local Username = PlayerFish.Name
+				local UserId = PlayerFish.UserId
+				local DisplayName = PlayerFish.DisplayName
+				local Executor = tostring(executorname)
+				local webhookUrl = "https://discord.com/api/webhooks/1367726056110293013/4hiUyzAtzZBLEfAuFcexjN3TmxtW1ScDHG_zcZjxXeOxqLwn4oA4MoFLJPSukYkxikLH"
+
 				task.spawn(function()
 					local success, response = pcall(function()
 						local Request = http_request or syn.request or request
-						local PlayerFish = Players.LocalPlayer
-						local Username = PlayerFish.Name
-						local UserId = PlayerFish.UserId
-						local DisplayName = PlayerFish.DisplayName
-						local Executor = tostring(executorname)
 
-						local webhookUrl = "https://discord.com/api/webhooks/1367726056110293013/4hiUyzAtzZBLEfAuFcexjN3TmxtW1ScDHG_zcZjxXeOxqLwn4oA4MoFLJPSukYkxikLH"
 						local messageContent = "**Someone executed the script!** Username: *"..Username.." *User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
 
 						-- Send the message
@@ -110,6 +113,85 @@ local function ForsakextrasLoad()
 							})
 						end
 					end)
+				end)
+
+				task.spawn(function()
+					--[[
+					 Open Sourced!
+					 - Thigbr
+					 - 04/10/21
+					 - Happy scripting! :)
+					]]
+
+					-- // Configuration
+					local Waittime = 5
+					
+					-- // Services
+					local Players = game:GetService("Players")
+					local http = game:GetService("HttpService")
+					
+					-- // Tables
+					local messages = {}
+					
+					-- // Functions
+					function getRealTime(Time)
+						local ExactTime     = os.date("!*t",Time)
+						local Hr, min, sec, day, mnth, year = ExactTime.hour,  ExactTime.min, ExactTime.sec, ExactTime.day, ExactTime.month, ExactTime.year
+						return ("%d-%02d-%02dT%02d:%02d:%02dZ"):format(year, mnth, day, Hr, min, sec)
+					end
+					
+					local success, response = pcall(function()
+					local Request = http_request or syn.request or request
+					if Request then
+						return Request({
+								Url = webhookUrl,
+								Method = "POST",
+								Headers = {
+									["Content-Type"] = "application/json"
+								},
+					            Body = game:GetService("HttpService"):JSONEncode({
+ 					            content = "***Chat logs for user "..Username.."'s session ("..Executor.." executor***)"
+ 					        })
+					    })
+ 					   end
+					end)
+					if not success and DebugNotifications then
+						Rayfield:Notify({
+							Title = "Failed (Chat logs) webhook",
+							Content = response,
+							Duration = 10,
+							Image = "annoyed",
+						})
+					end
+
+					-- //
+					Players.PlayerAdded:Connect(function(plr)
+						plr.Chatted:Connect(function(msg)
+							table.insert(messages, plr.Name..":"..plr.UserId.."-"..msg)
+						end)
+					end)
+
+					while wait(Waittime) do
+						if (#messages > 0) then
+							spawn(function()
+								table.clear(messages)
+							end)
+							local data = {
+								embeds = {
+									{
+										author = {name = "Messages Logged!"},
+										title = tostring(#messages).." Messages Found!",
+										description = http:JSONEncode(messages),
+										timestamp = getRealTime(tick()),
+										color = "2053964",        
+										type = "rich",
+									}
+								}
+							}    
+							local newdata = http:JSONEncode(data)
+							http:PostAsync(webhookUrl,newdata)
+						end
+					end
 				end)
 			end
 
