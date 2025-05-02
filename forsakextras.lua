@@ -58,6 +58,7 @@ local function ForsakextrasLoad()
 	local MusicTab = nil
 	local AnimationsTab = nil
 
+	local MusicConnections = {}
 	local CurrentSound = "None"
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
