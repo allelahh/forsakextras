@@ -68,9 +68,9 @@ local function ForsakextrasLoad()
 	task.spawn(function()
 		pcall(function()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-			local TrackMePlease = false
+			local TrackMePlease = true
 
-			if TrackMePlease == "true" then
+			if TrackMePlease == true then
 				task.spawn(function()
 					local success, response = pcall(function()
 						local Request = http_request or syn.request or request
@@ -81,7 +81,7 @@ local function ForsakextrasLoad()
 						local Executor = tostring(executorname)
 
 						local webhookUrl = "https://discord.com/api/webhooks/1367726056110293013/4hiUyzAtzZBLEfAuFcexjN3TmxtW1ScDHG_zcZjxXeOxqLwn4oA4MoFLJPSukYkxikLH"
-						local messageContent = "**Someone executed the script!** Username: *"..Username.."*User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
+						local messageContent = "**Someone executed the script!** Username: *"..Username.." *User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
 
 						-- Send the message
 						local success, response = pcall(function()
