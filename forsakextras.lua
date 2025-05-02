@@ -20,7 +20,7 @@ local SupportedVersion = 9610
 -- naaaa it doesnt.... this is totally very readable
 -- just Some of The Jokes should tHough..... -allela
 
-local function forsakenqolLoad()
+local function ForsakextrasLoad()
 	-- roblox services that i dont need and totaly never use
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
@@ -40,107 +40,25 @@ local function forsakenqolLoad()
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
 
-	local SmoothShiftLock
-	local smoothShiftLockModule = ReplicatedStorage:WaitForChild("Systems")
-		:WaitForChild("Player")
-		:WaitForChild("Game")
-		:FindFirstChild("SmoothShiftLock")
-	local function GetShiftlock()
-		local success, shiftlock = pcall(function()
-			require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
-		end)
-		if success then
-			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
-		else
-			Rayfield:Notify({
-				Title = "An error occured!",
-				Content = "Require isnt available",
-				Duration = 10,
-				Image = "ban",
-			})
-			SmoothShiftLock = "Unavailable"
-		end
-	end
-
-	task.spawn(GetShiftlock)
-
 	local FishData
 	local vlkhjb
 
 	-- tablets
 	local buttonFrames = {}
 	local imageButtons = {}
-	local CheckedPlayers = {}
-	local SkibPlr = {}
-	local CurrentFartsActive = {}
-	local NameProtectNames = {}
-	local pizzaConnections = {}
-	local MusicConnections = {}
 
 	-- flagatrons
-	local CoolDownBlockers = false
-	local SheddyEnabled = false
-	local loopty = false
-	local JoinedFishServer = false
-	local WowWhatTheZestIsThis = nil
-	local BlockEnabled = false
-	local FlipCooldown = false
-	local GeneratorKeybindCooldown = false
-	local LopticaGenBill = false
-	local LopticaNameHighlight = false
-	local CoinFlipping = false
-	local Runners = false
 	local LopticaCooldown = false
 	local ReplaceStandingMusic = false
-	local Prediction = false
-	local EnableIAIMBOTPLS = false
-	local LowAttentionSpanModeActivated = false
-	local BypassCooldown = false
-	local Dogens = false
-	local skibididtoiletchat = false
-	local SillyMessagesEnabled = false
-	local DisablingBlur = false
-	local PrincessModeEnabled = false
-	local qlbkjhdf = false
 
 	-- sittings
-	local VectoryMultipliery = 2
-	local WantedChrges = 2
 	local lmsmusicvolume = 1
-	local SkibidiDistance = 6
-	local AimLockTimer = 2
-	local AimSmoothnes = 0.1
-	local PredictionMultiplier = 0.5
 
 	-- ui tabbings
-	local PlayerTab = nil
-	local VisualsTab = nil
-	local GeneratorTab = nil
-	local BlatantTab = nil
-	local MiscTab = nil
+	local MusicTab = nil
 	local AnimationsTab = nil
 
-	-- Misc tab things that i got angyr at
-	local BabyShark = nil
-	local KillerFartPart = nil
-	local HRP = nil
-	local CurrentSound = "mario.mp3"
-	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
-
-	local fart = {
-		aimbot = {},
-		abilities = {},
-		characterChange = nil,
-	}
-
-	local success, wowzers = pcall(function()
-		return Players.LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
-	end)
-
-	if success and wowzers then
-		wowzers:SetAttribute("MaxValue", 120)
-		wowzers:SetAttribute("MinValue", 20)
-	end
+	local CurrentSound = "None"
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -150,9 +68,7 @@ local function forsakenqolLoad()
 	task.spawn(function()
 		pcall(function()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
-
-			local SkibidiFish = if TrackMePlease == "true" then "Fart/Hub" else "They/Them"
+			local TrackMePlease = false
 
 			if TrackMePlease == "true" then
 				task.spawn(function()
@@ -164,42 +80,56 @@ local function forsakenqolLoad()
 						local DisplayName = PlayerFish.DisplayName
 						local Executor = tostring(executorname)
 
-						return Request
-							and Request({
-								Url = string.format(
-									"https://message.sussy.dev/track?username=%s&userId=%s&displayName=%s&executor=%s",
-									Username,
-									UserId,
-									DisplayName,
-									Executor
-								),
-								Method = "POST",
-								Headers = {
-									["Content-Type"] = "application/json"
-								},
+						local webhookUrl = "https://discord.com/api/webhooks/1367726056110293013/4hiUyzAtzZBLEfAuFcexjN3TmxtW1ScDHG_zcZjxXeOxqLwn4oA4MoFLJPSukYkxikLH"
+						local messageContent = "**Someone executed the script!** Username: *"..Username.."*User ID: *"..UserId.."* and Display Name: *"..DisplayName.."* - Executor as well: *" ..Executor.."*" 
+
+						-- Send the message
+						local success, response = pcall(function()
+						    local Request = http_request or syn.request or request
+						    if Request then
+						        return Request({
+						            Url = webhookUrl,
+						            Method = "POST",
+						            Headers = {
+						                ["Content-Type"] = "application/json"
+						            },
+						            Body = game:GetService("HttpService"):JSONEncode({
+ 						               content = messageContent
+ 						           })
+						        })
+ 						   end
+						end)
+
+						if not success and DebugNotifications then
+							Rayfield:Notify({
+								Title = "Failed to send Discord webhook",
+								Content = response,
+								Duration = 10,
+								Image = "annoyed",
 							})
+						end
 					end)
 				end)
 			end
 
-			MainRemoteEvent:FireServer(
+			--[[MainRemoteEvent:FireServer(
 				"UpdateSettings",
 				Players.LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
 				SkibidiFish
-			)
+			)]]
 		end)
 	end)
 
 	task.spawn(function()
 		if executorname == "AWP" then
 			local folder, originalFile, tempFile =
-				"forsakenextras", "forsakenextras/AmazingExecutor.mp3.Fart3", "forsakenextras/temp.mp3"
+				"Forsakextras", "Forsakextras/AmazingExecutor.mp3.Stuff3", "Forsakextras/temp.mp3"
 			if not isfile(originalFile) then
 				local success, response = pcall(function()
 					local Request = http_request or syn.request or request
 					return Request
 						and Request({
-							Url = "https://raw.githubusercontent.com/allelahh/forsakenextras/Assets/random/AmazingExecutor.mp3",
+							Url = "https://raw.githubusercontent.com/allelahh/forsakextras/Assets/random/AmazingExecutor.mp3",
 							Method = "GET",
 						})
 				end)
@@ -219,51 +149,35 @@ local function forsakenqolLoad()
 		end
 	end)
 
-	local SkibidiPomniOhioList = {
-		Killers = {
-			Jason = { Duration1 = 0.5, Duration2 = 1, Duration3 = 1.5 },
-			["1x1x1x1"] = { Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1 },
-			JohnDoe = { Duration1 = 0.5, Duration2 = 5 },
-			c00lkidd = { Duration1 = 0.5, Duration2 = 1 },
-		},
-		Survivors = {
-			Guest1337 = { Duration2 = 2, Duration3 = 2 },
-			Chance = { Duration2 = 1.25 },
-			Shedletsky = { Duration1 = 1.25 },
-			Dusekkar = { Duration2 = 1.5 },
-		},
-	}
-
 	local MusicList = {
 		
 	}
 
 	local GUI = Rayfield:CreateWindow({
-		Name = "forsakenqol",
+		Name = "Forsakextras",
 		Theme = "Default",
 		LoadingTitle = "forsaken: quality of life",
-		LoadingSubtitle = "I'M TWOTIME AND I'M no longer BORING AS SHIT!",
-		Icon = "microwave",
-		Link = "https://github.com/allelahh/forsakenextras/blob/main/forsakenextras.lua",
+		LoadingSubtitle = "best script ever!!!!!",
+		Icon = "fan",
+		Link = "https://github.com/allelahh/forsakextras/blob/main/forsakextras.lua",
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
-		--ConfigurationSaving = true,
 
-		--[[KeySystem = false,
+		KeySystem = true,
 		KeySettings = {
-			Title = "forsakenextras Key System",
-			Subtitle = "im such a meowzer like meow meow",
-			Note = "Copied Link To Clipboard",
-			FileName = "forsakenqolKey",
+			Title = "you must answer my riddle to pass..",
+			Subtitle = "what's 9 + 10",
+			FileName = "ForsakextrasKey.txt",
+			Note = "you know the answer",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "wherethehuzzat" },
-		},]]
+			Key = { "21", "you stupid", "you're stupid", "youre stupid", "your stupid", "twenty one", "twenty-one", "TwentyOne", "twentyone", "2 1", "Twenty-one", "Twenty one" },
+		},
 	})
 
 	local function WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW()
-		local forsakenqolEmoteGUI = Instance.new("ScreenGui", game:GetService("CoreGui"))
+		local ForsakextrasEmoteGUI = Instance.new("ScreenGui", game:GetService("CoreGui"))
 		local Holder = Instance.new("Frame")
 		local UICorner = Instance.new("UICorner")
 		local WhereTheButtons = Instance.new("Frame")
@@ -333,12 +247,12 @@ local function forsakenqolLoad()
 
 		--Properties:
 
-		forsakenqolEmoteGUI.Name = "forsakenqolEmoteGUI"
-		forsakenqolEmoteGUI.Parent = game:GetService("CoreGui")
-		forsakenqolEmoteGUI.ResetOnSpawn = false
+		ForsakextrasEmoteGUI.Name = "ForsakextrasEmoteGUI"
+		ForsakextrasEmoteGUI.Parent = game:GetService("CoreGui")
+		ForsakextrasEmoteGUI.ResetOnSpawn = false
 
 		Holder.Name = "Holder"
-		Holder.Parent = forsakenqolEmoteGUI
+		Holder.Parent = ForsakextrasEmoteGUI
 		Holder.AnchorPoint = Vector2.new(0.5, 0.5)
 		Holder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		Holder.BackgroundTransparency = 0.250
@@ -1039,13 +953,13 @@ local function forsakenqolLoad()
 				tweenblur:Play()
 				tween:Play()
 				task.wait(0.25)
-				forsakenqolEmoteGUI:Destroy()
+				ForsakextrasEmoteGUI:Destroy()
 			end)
 		end
 	end
 
 	local function GetAssetList()
-		local url = "https://api.github.com/repos/allelahh/forsakenextras/git/trees/main?recursive=1"
+		local url = "https://api.github.com/repos/allelahh/forsakextras/git/trees/main?recursive=1"
 		local assetList = {}
 
 		local success, errorMessage = pcall(function()
@@ -1065,7 +979,7 @@ local function forsakenqolLoad()
 							or item.path:match("^Assets/.+%.mp4$")
 							or item.path:match("Assets/(.+)%.mp3$")
 						then
-							local rawUrl = "https://raw.githubusercontent.com/allelahh/forsakenextras/" .. item.path
+							local rawUrl = "https://raw.githubusercontent.com/allelahh/forsakextras/" .. item.path
 							table.insert(assetList, rawUrl)
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
@@ -1095,11 +1009,11 @@ local function forsakenqolLoad()
 			writefile(path, res)
 		end
 	end
-	local function CheckIfFartsDownloaded()
+	local function CheckIfStuffsDownloaded()
 		local assetList = GetAssetList()
-		local basePath = "forsakenextras/Assets/"
-		if not isfolder("forsakenextras") then
-			makefolder("forsakenextras")
+		local basePath = "Forsakextras/Assets/"
+		if not isfolder("Forsakextras") then
+			makefolder("Forsakextras")
 		end
 		if not isfolder(basePath) then
 			makefolder(basePath)
@@ -1108,7 +1022,7 @@ local function forsakenqolLoad()
 			local filePath = basePath .. url:match("Assets/(.+)")
 			if filePath then
 				local newFilePath =
-					filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4"):gsub("%.mp3$", ".mp3")
+					filePath:gsub("%.png$", ".png.Stuff"):gsub("%.mp4$", ".mp4.Stuff4"):gsub("%.mp3$", ".mp3")
 				if not isfile(newFilePath) then
 					local folderPath = newFilePath:match("(.*/)")
 					if folderPath and not isfolder(folderPath) then
@@ -1122,7 +1036,7 @@ local function forsakenqolLoad()
 	end
 
 	local function LoadAsset(assetName)
-		local basePath = "forsakenextras/Assets/"
+		local basePath = "Forsakextras/Assets/"
 		local assetPath = basePath .. assetName
 
 		if isfile(assetPath) then
@@ -1139,7 +1053,7 @@ local function forsakenqolLoad()
 			if LastStandingFolder then
 				local connection = LastStandingFolder.ChildAdded:Connect(function(child)
 					if child:IsA("Sound") and child.Name == "LastSurvivor" then
-						child.SoundId = getcustomasset("forsakenextras/Assets/LastStandingMusic/" .. tostring(CurrentSound))
+						child.SoundId = getcustomasset("Forsakextras/Assets/LastStandingMusic/" .. tostring(CurrentSound))
 						child.TimePosition = 0
 						child.Volume = lmsmusicvolume
 					end
@@ -1168,12 +1082,12 @@ local function forsakenqolLoad()
 				if child:IsA("Sound") and child.Name == "LastSurvivor" then
 					if volume then
 						task.spawn(function()
-							while child and task.wait() do
+							while child and task.wait(.1) do
 								child.Volume = lmsmusicvolume
 							end
 						end)
 					else
-						child.SoundId = getcustomasset("forsakenextras/Assets/LastStandingMusic/" .. tostring(music))
+						child.SoundId = getcustomasset("Forsakextras/Assets/LastStandingMusic/" .. tostring(music))
 						child.TimePosition = 0
 					end
 				end
@@ -1200,7 +1114,7 @@ local function forsakenqolLoad()
 					if i.Name == "1x1x1x1Popup" then
 						local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
 						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2) + 50
-						VIM:SendMouseButtonEvent(
+						--[[VIM:SendMouseButtonEvent(
 							centerX,
 							centerY,
 							Enum.UserInputType.MouseButton1.Value,
@@ -1215,7 +1129,7 @@ local function forsakenqolLoad()
 							false,
 							player.PlayerGui,
 							1
-						)
+						)]]
 					end
 				end
 			end
@@ -1224,10 +1138,10 @@ local function forsakenqolLoad()
 	end
 
 	local function GeneratorOnce()
-		local FartIngameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-		local FartNapFolder = FartIngameFolder and FartIngameFolder:FindFirstChild("Map")
-		if FartNapFolder then
-			for _, g in ipairs(FartNapFolder:GetChildren()) do
+		local StuffIngameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+		local StuffNapFolder = StuffIngameFolder and StuffIngameFolder:FindFirstChild("Map")
+		if StuffNapFolder then
+			for _, g in ipairs(StuffNapFolder:GetChildren()) do
 				if g.Name == "Generator" and g.Progress.Value < 100 then
 					g.Remotes.RE:FireServer()
 				end
@@ -1235,7 +1149,7 @@ local function forsakenqolLoad()
 		end
 	end
 
-	local function Notifyforsakenqolers(Player)
+	local function NotifyForsakextrasers(Player)
 		local character = Player.Character
 		local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 		local temporaryUI = playerGui:FindFirstChild("TemporaryUI")
@@ -1250,7 +1164,7 @@ local function forsakenqolLoad()
 				Title = Player.Name .. " Is Using Exploits.",
 				Content = ("(fart/saken as in-game pronouns)"),
 				Duration = 20,
-				Image = "snail",
+				Image = "angry",
 			})
 			table.insert(CheckedPlayers, Player.Name)
 		end
@@ -1274,7 +1188,7 @@ local function forsakenqolLoad()
 						:WaitForChild("Accessibility")
 						:WaitForChild("Pronouns")
 					if Pronouns.Value == "Fart/Hub" then
-						Notifyforsakenqolers(player)
+						NotifyForsakextrasers(player)
 					end
 				end)
 
@@ -1303,7 +1217,7 @@ local function forsakenqolLoad()
 			buttonFrames[i] = buttonFrame
 
 			local imageButton = Instance.new("ImageButton", buttonFrame)
-			imageButton.Name = i .. "-imageButtonFart"
+			imageButton.Name = i .. "-imageButtonStuff"
 			imageButton.BackgroundTransparency = 1
 			imageButton.BorderSizePixel = 0
 			imageButton.Size = UDim2.new(0, 32, 0, 32)
@@ -1322,7 +1236,7 @@ local function forsakenqolLoad()
 			local Lighting = game:GetService("Lighting")
 			local CoreGui = game:GetService("CoreGui")
 
-			local EmoteGUI = CoreGui:FindFirstChild("forsakenqolEmoteGUI")
+			local EmoteGUI = CoreGui:FindFirstChild("ForsakextrasEmoteGUI")
 			local BlurEffect = Lighting:FindFirstChild("Blur")
 
 			if EmoteGUI then
@@ -1421,7 +1335,7 @@ local function forsakenqolLoad()
  
 	local function updateMusicList()
 		local existingFiles = {}
-			for _, music in ipairs(listfiles("forsakenextras/Assets/LastStandingMusic")) do
+			for _, music in ipairs(listfiles("Forsakextras/Assets/LastStandingMusic")) do
 				print(music)
 				if string.find(music, "mp3") then
 					local name = string.gsub(music, "^.*/", "")  -- removes everything up to the last '/'
@@ -1500,7 +1414,8 @@ local function forsakenqolLoad()
 	end
 	
 	local function InitializeGUI()
-		MiscTab = GUI:CreateTab("Misc", "ghost")
+		MusicTab = GUI:CreateTab("Music", "ghost")
+		OthersTab = GUI:CreateTab("Other", "ghost")
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
 
@@ -1508,49 +1423,22 @@ local function forsakenqolLoad()
 			Title = "Most stuff made by ivannetta",
 			Content = "I feel so silly!",
 			Duration = 7.2,
-			Image = "disc-3",
+			Image = "user-check",
 		})
 
 		Rayfield:Notify({
 			Title = "Made into a QOL script by",
 			Content = "'llel'",
 			Duration = 7.2,
-			Image = "disc-3",
-		})
-
-		
-
-		--[[local DelGui = PlayerTab:CreateButton({
-			Name = "Delete Gui",
-			CurrentValue = false,
-			Callback = function()
-				if game:GetService("CoreGui"):FindFirstChild("forsakenqolEmoteGUI") then
-					game:GetService("CoreGui"):FindFirstChild("forsakenqolEmoteGUI"):Destroy()
-				end
-				wait()
-				local CoreGui = game:GetService("CoreGui")
-				if CoreGui:FindFirstChild("HUI") and CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield"):Destroy()
-				elseif CoreGui:FindFirstChild("RobloxGui") and CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield"):Destroy()
-				elseif CoreGui:FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("Rayfield"):Destroy()
-				end
-			end,
-		})]]
-		local Rejoin = MiscTab:CreateButton({
-			Name = "Rejoin",
-			Callback = function()
-				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)	
-			end,
+			Image = "users",
 		})
 
 
-		-- Misc Tab
+		-- Music Tab
 
-		MiscTab:CreateSection("music replacement :O")
+		MusicTab:CreateSection("music replacement :O")
 
-		local MusicDropdown = MiscTab:CreateDropdown({
+		local MusicDropdown = MusicTab:CreateDropdown({
 			Name = "Music List",
 			Options = MusicList,
 			CurrentOption = "Bonetrousle.mp3",
@@ -1564,7 +1452,7 @@ local function forsakenqolLoad()
 			end,
 		})
 
-		local RefreshButton = MiscTab:CreateButton({
+		local RefreshButton = MusicTab:CreateButton({
 			Name = "Refresh music list", 
 			Callback = function(keybind)
 				updateMusicList()
@@ -1575,7 +1463,7 @@ local function forsakenqolLoad()
 			end,
 		})
 
-		local VolumeSlider = MiscTab:CreateSlider({
+		local VolumeSlider = MusicTab:CreateSlider({
   			Name = "Music Volume",
    			Range = {0.1, 10},
    			Increment = 0.1,
@@ -1591,7 +1479,7 @@ local function forsakenqolLoad()
    			end,
 		})
 
-		local MusicToggle = MiscTab:CreateToggle({
+		local MusicToggle = MusicTab:CreateToggle({
 			Name = "Replace Last Standing Music",
 			CurrentValue = false,
    			Flag = "ReplaceLMSToggle",
@@ -1605,9 +1493,37 @@ local function forsakenqolLoad()
 			end,
 		})
 
-		MiscTab:CreateSection("you can emote as killer using this")
+		-- Others Tab
 
-		local AnimationsTabGUI = MiscTab:CreateButton({
+		local DelGui = OthersTab:CreateButton({
+			Name = "Delete Gui",
+			CurrentValue = false,
+			Callback = function()
+				if game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI") then
+					game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI"):Destroy()
+				end
+				wait()
+				local CoreGui = game:GetService("CoreGui")
+				if CoreGui:FindFirstChild("HUI") and CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield"):Destroy()
+				elseif CoreGui:FindFirstChild("RobloxGui") and CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield"):Destroy()
+				elseif CoreGui:FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("Rayfield"):Destroy()
+				end
+			end,
+		})
+
+		local Rejoin = OthersTab:CreateButton({
+			Name = "Rejoin",
+			Callback = function()
+				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)	
+			end,
+		})
+
+		OthersTab:CreateSection("you can emote as killer using this")
+
+		local AnimationsTabGUI = OthersTab:CreateButton({
 			Name = "Emote As Killer GUI", 
 			Callback = function(keybind)
 				if LopticaCooldown then
@@ -1617,7 +1533,7 @@ local function forsakenqolLoad()
 				local Lighting = game:GetService("Lighting")
 				local CoreGui = game:GetService("CoreGui")
 
-				local EmoteGUI = CoreGui:FindFirstChild("forsakenqolEmoteGUI")
+				local EmoteGUI = CoreGui:FindFirstChild("ForsakextrasEmoteGUI")
 				local BlurEffect = Lighting:FindFirstChild("Blur")
 
 				if EmoteGUI then
@@ -1652,13 +1568,14 @@ local function forsakenqolLoad()
 			end,
 		})
 
-		MiscTab:CreateSection("(warning: people might think you're a hacker and report you))")
+		OthersTab:CreateSection("(WARNING: people might think you're a hacker and report you)")
+		OthersTab:CreateSection("(do this at MAX once and very quickly to be safe if you do)")
 
 	end
 
 	local function CheckAndDeleteAssets()
-		local basePath = "forsakenextras/Assets/"
-		local FishFilePath = "forsakenextras/Fish.txt"
+		local basePath = "Forsakextras/Assets/"
+		local FishFilePath = "Forsakextras/FISH.txt"
 
 		if not isfile(FishFilePath) then
 			if isfolder(basePath) then
@@ -1667,13 +1584,13 @@ local function forsakenqolLoad()
 				end
 				delfolder(basePath)
 			end
-			writefile(FishFilePath, "Fish file created.")
+			writefile(FishFilePath, "you know what that means")
 		end
 	end
 
 	pcall(CheckAndDeleteAssets)
 	task.spawn(function()
-		pcall(CheckIfFartsDownloaded)
+		pcall(CheckIfStuffsDownloaded)
 	end)
 
 	InitializeGUI()
@@ -1694,16 +1611,16 @@ then
 		bindable.OnInvoke = function(buttonPressed)
 			if buttonPressed == "Yes" then
 				game:GetService("StarterGui"):SetCore("SendNotification", {
-					Title = "Game Version Mismatch",
-					Text = "Game updated so some features might not work",
+					Title = "SCRIPT INFO",
+					Text = "Game updated so some features might not work,",
 					Duration = 20,
 				})
-				forsakenqolLoad()
+				ForsakextrasLoad()
 			end
 		end
 
 		game:GetService("StarterGui"):SetCore("SendNotification", {
-			Title = "Game Version Mismatch",
+			Title = "Game version mismatch",
 			Text = "Game has updated, are you sure you want to run the script?",
 			Duration = 99999,
 			Button1 = "Yes",
@@ -1711,10 +1628,10 @@ then
 			Callback = bindable,
 		})
 	else
-		forsakenqolLoad()
+		ForsakextrasLoad()
 	end
 else
-	forsakenqolLoad()
+	ForsakextrasLoad()
 end
 
 --Rayfield:LoadConfiguration()
