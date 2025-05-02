@@ -27,6 +27,7 @@ local SupportedVersion = 9610
 
 -- naaaa it doesnt.... this is totally very readable
 -- just Some of The Jokes should tHough..... -allela
+if game.PlaceId ~= 18687417158 then return end
 
 local function ForsakextrasLoad()
 	-- roblox services that i dont need and totaly never use
