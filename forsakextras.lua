@@ -1938,17 +1938,40 @@ local function ForsakextrasLoad()
 		QOLTab:CreateSection("(WARNING: people might THINK you're a hacker and report you)")
 		QOLTab:CreateSection("(do this at MAX once and very quickly to be safe if you do)")
 
-		local VolumeSlider = QOLTab:CreateSlider({
-  			Name = "test",
-   			Range = {0.1, 10},
-   			Increment = 0.1,
-   			Suffix = "test",
-   			CurrentValue = 1,
-   			Flag = "test", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		local MaxZoomSlider = QOLTab:CreateSlider({
+  			Name = "Max Camera Zoom",
+   			Range = {12, 20},
+   			Increment = 1,
+   			Suffix = "Max Zoom Distance",
+   			CurrentValue = 12,
+   			Flag = "maxzoomcamval", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    			Callback = function(Value)
-				
+				game.Players.LocalPlayer.CameraMaxZoomDistance = Value
    			end,
 		})
+		local FovSlider = QOLTab:CreateSlider({
+  			Name = "Field of view",
+   			Range = {10, 120},
+   			Increment = 5,
+   			Suffix = "FOV value",
+   			CurrentValue = 12,
+   			Flag = "fovsliderval", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   			Callback = function(Value)
+				local success, wowzers = pcall(function()
+					return Players.LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
+				end)
+				
+				if success and wowzers then
+					wowzers:SetAttribute("MaxValue", 120)
+					wowzers:SetAttribute("MinValue", 20)
+				end
+
+				wowzers.Value = Value
+
+				task.wait()
+   			end,
+		})
+		QOLTab:CreateSection("(these might be removed, it seems cheaty but not at the same time..)")
 
 		-- Miscs Tab
 
