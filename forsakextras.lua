@@ -1,6 +1,8 @@
 local DebugNotifications = false
 local TrackMePlease = true --turn this off if you dont want me to know ur username and executor, etc
 --this also logs chat messages from your session/server/game whatever ud like to call it
+--cus why not
+--u can turn it off anyway-
 
 local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
@@ -24,11 +26,11 @@ local SupportedVersion = 9610
 -- like allat needs to be deleted 🙏
 
 -- naaaa it doesnt.... this is totally very readable
--- just Some of The Jokes should tHough..... -'llel'
+-- just Some of The Jokes should tHough..... -allela
 if game.PlaceId ~= 18687417158 then return end
 
 local function ForsakextrasLoad()
-	-- roblox services that i dont need and totally never use
+	-- roblox services that i dont need and totaly never use
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
 	local RunService = game:GetService("RunService")
@@ -36,7 +38,7 @@ local function ForsakextrasLoad()
 	local VIM = game:GetService("VirtualInputManager")
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-	-- remote ̶s̶k̶i̶b̶i̶d̶i̶ ̶t̶o̶i̶l̶e̶t̶ ̶e̶n̶a̶b̶l̶e̶r̶  EVENT.
+	-- remote skibidi toilet enabler
 	local MainRemoteEvent = ReplicatedStorage.Modules.Network.RemoteEvent
 
 	-- literally just playergui 😭
@@ -72,7 +74,6 @@ local function ForsakextrasLoad()
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
 	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true, Xeno = true }
-	local ExecutorNameString = tostring(executorname)
 
 	task.spawn(function()
 		pcall(function()
@@ -1595,7 +1596,7 @@ local function ForsakextrasLoad()
 	end
 	
 	local function InitializeGUI()
-		MusicTab = GUI:CreateTab("Music", "ghost")
+		MusicTab = GUI:CreateTab("Music", "music")
 		OthersTab = GUI:CreateTab("Other", "ghost")
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
@@ -1612,13 +1613,6 @@ local function ForsakextrasLoad()
 			Content = "'llel'",
 			Duration = 7.2,
 			Image = "users",
-		})
-
-		Rayfield:Notify({
-			Title = "!!THIS SCRIPT ISN'T CHEATS!!",
-			Content = "read the github repo readme",
-			Duration = 20,
-			Image = "triangle-alert",
 		})
 
 
@@ -1640,8 +1634,7 @@ local function ForsakextrasLoad()
 			end,
 		})
 
-
-		OthersTab:CreateSection("you can press the button below")
+		MusicTab:CreateSection("you can press the button below")
 		local RefreshButton = MusicTab:CreateButton({
 			Name = "Refresh music list", 
 			Callback = function(keybind)
@@ -1652,9 +1645,8 @@ local function ForsakextrasLoad()
 				end
 			end,
 		})
-		OthersTab:CreateSection("to see ur custom mp3s on the list; add them to")
-		OthersTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/LastStandingMusic")
-
+		MusicTab:CreateSection("to see ur custom mp3s on the list; add them to")
+		MusicTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/LastStandingMusic")
 
 		local VolumeSlider = MusicTab:CreateSlider({
   			Name = "Music Volume",
@@ -1673,7 +1665,7 @@ local function ForsakextrasLoad()
 		})
 
 		local MusicToggle = MusicTab:CreateToggle({
-			Name = "Replace Last Man Standing Music",
+			Name = "Replace Last Standing Music",
 			CurrentValue = false,
    			Flag = "ReplaceLMSToggle",
 			Callback = function(state)
