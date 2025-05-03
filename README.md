@@ -1,7 +1,7 @@
 # forsakextras
 
 *the script:*
-``loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()``
+**``loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()``**
 _IMPORTANT: if you don't want me to track your username and executor and chat logs of your session (idk why i did those i just like webhooks), just set "TrackMePlease" to "false" on the start of the script. (forsakextras.lua)_
 
 Repo for assets like audios/videos/images for a **QoL script** for the Roblox game **"Forsaken"** which __**gives no advantages**__;
