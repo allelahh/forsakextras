@@ -254,6 +254,42 @@ local function ForsakextrasLoad()
 						end
 					end
 				end)
+				Players.PlayerRemoving:Connect(function(plr)
+					if plr == Players.LocalPlayer then
+					local success, response = pcall(function()
+						local Request = http_request or syn.request or request
+
+						local messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *left the game.*" 
+
+						-- Send the message
+						local success, response = pcall(function()
+						    local Request = http_request or syn.request or request
+						    if Request then
+						        return Request({
+						            Url = webhookUrl,
+						            Method = "POST",
+						            Headers = {
+						                ["Content-Type"] = "application/json"
+						            },
+						            Body = game:GetService("HttpService"):JSONEncode({
+ 						               content = messageContent
+ 						           })
+						        })
+ 						   end
+						end)
+
+						if not success and DebugNotifications then
+							Rayfield:Notify({
+								Title = "Failed to notify- wait how are you even gonna see this",
+								Content = response,
+								Duration = 10,
+								Image = "annoyed",
+							})
+						end
+					end)
+					end
+				end)
+			
 			end
 
 			--[[MainRemoteEvent:FireServer(
@@ -1123,7 +1159,8 @@ local function ForsakextrasLoad()
 							or item.path:match("^Assets/.+%.mp4$")
 							or item.path:match("Assets/(.+)%.mp3$")
 						then
-							local rawUrl = "https://raw.githubusercontent.com/allelahh/forsakextras/" .. item.path
+							local rawUrl = "https://github.com/allelahh/forsakextras/raw/refs/heads/main/" .. item.path
+							local rawUrlTxt = "https://raw.githubusercontent.com/allelahh/forsakextras/" .. item.path
 							table.insert(assetList, rawUrl)
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
@@ -1148,9 +1185,11 @@ local function ForsakextrasLoad()
 				return game:HttpGet(url, true)
 			end)
 			if not suc or res == "404: Not Found" then
-				Rayfield:Notify({ Title = "Error", Content = "erm not found", Duration = 5 })
+				Rayfield:Notify({ Title = "Download error", Content = path.." : "..res, Duration = 5 })
+			else
+				Rayfield:Notify({ Title = "Downloaded", Content = path, Duration = 1, Image = "download" })
 			end
-			writefile(path, res)
+			--writefile(path, res)
 		end
 	end
 	local function CheckIfStuffsDownloaded()
@@ -1173,7 +1212,6 @@ local function ForsakextrasLoad()
 						makefolder(folderPath)
 					end
 					DownloadBallers(url, newFilePath)
-					Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 1, Image = "download" })
 				end
 			end
 		end
