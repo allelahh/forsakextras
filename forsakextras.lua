@@ -4,6 +4,14 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --cus why not
 --u can turn it off anyway-
 
+--planned:
+--max zoom distance
+
+--random names so i can set debug people with a table and in a better way later on and more efficiently
+if game.Players.LocalPlayer.Name == ("allelahh" or "mMigueLl161109" or "dropier_h" or "guccipranc") then
+	DebugNotifications = true
+end
+
 local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
 local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
@@ -211,6 +219,11 @@ local function ForsakextrasLoad()
 
 					while wait(Waittime) do
 						if (#messages > 0) then
+
+						spawn(function()
+							table.clear(messages)
+						end)
+
 						local http = game:GetService("HttpService")
 
 						local data = {
@@ -249,9 +262,7 @@ local function ForsakextrasLoad()
 							})
 						end
 
-						spawn(function()
-							table.clear(messages)
-						end)
+						
 
 						end
 					end
@@ -1603,7 +1614,8 @@ local function ForsakextrasLoad()
 	
 	local function InitializeGUI()
 		MusicTab = GUI:CreateTab("Music", "music")
-		OthersTab = GUI:CreateTab("Other", "ghost")
+		QOLTab = GUI:CreateTab("Quality-of-Life", "award")
+		MiscsTab = GUI:CreateTab("Misc", "ghost")
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
 
@@ -1684,38 +1696,202 @@ local function ForsakextrasLoad()
 			end,
 		})
 
-		-- Others Tab
+		-- QOL Tab
 
-		local DelGui = OthersTab:CreateButton({
-			Name = "Delete Gui",
-			CurrentValue = false,
-			Callback = function()
-				if game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI") then
-					game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI"):Destroy()
-				end
-				wait()
-				local CoreGui = game:GetService("CoreGui")
-				if CoreGui:FindFirstChild("HUI") and CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield"):Destroy()
-				elseif CoreGui:FindFirstChild("RobloxGui") and CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield"):Destroy()
-				elseif CoreGui:FindFirstChild("Rayfield") then
-					CoreGui:FindFirstChild("Rayfield"):Destroy()
-				end
-			end,
-		})
-
-		local Rejoin = OthersTab:CreateButton({
+		local Rejoin = QOLTab:CreateButton({
 			Name = "Rejoin",
 			Callback = function()
 				Rejoined = true
 				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)	
 			end,
 		})
+		
+		QOLTab:CreateSection("you can switch out emotes mid round with this!:")
+		local ToggleMenus = QOLTab:CreateButton({
+			Name = "Toggle inventory screen",
+			Callback = function()
+				local localplayer = game.Players.LocalPlayer
+				local mainy = localplayer.PlayerGui.MainUI
 
-		OthersTab:CreateSection("you can emote as killer using this")
+				if localplayer.Character.Parent.Name == "Spectating" then
+					Rayfield:Notify({
+								Title = "Error while toggling",
+								Content = "You need to be in a round for this.",
+								Duration = 5,
+								Image = "triangle-alert",
+							})
+					return
+				end
+				
+				if mainy.InventoryScreen.Visible == false then
+					mainy.InventoryScreen.Visible = true
+					mainy.InventoryScreen.Size = UDim2.new(1, -20, 1, -20)
+				else
+					mainy.InventoryScreen.Visible = false
+					mainy.InventoryScreen.Size = UDim2.new(1, -20, 0, 0)
+				end
+			end,
+		})
+		local ToggleMenus = QOLTab:CreateButton({
+			Name = "Toggle shop screen",
+			Callback = function()
+				local localplayer = game.Players.LocalPlayer
+				local mainy = localplayer.PlayerGui.MainUI
 
-		local AnimationsTabGUI = OthersTab:CreateButton({
+				if localplayer.Character.Parent.Name == "Spectating" then
+					Rayfield:Notify({
+								Title = "Error while toggling",
+								Content = "You need to be in a round for this.",
+								Duration = 5,
+								Image = "triangle-alert",
+							})
+					return
+				end
+				
+				if mainy.ShopScreen.Visible == false then
+					mainy.ShopScreen.Visible = true
+					mainy.ShopScreen.Size = UDim2.new(1, -20, 1, -20)
+				else
+					mainy.ShopScreen.Visible = false
+					mainy.ShopScreen.Size = UDim2.new(1, -20, 0, 0)
+				end
+			end,
+		})
+		QOLTab:CreateSection("(or change some settings):")
+		local ToggleMenus = QOLTab:CreateButton({
+			Name = "Toggle settings screen",
+			Callback = function()
+				local localplayer = game.Players.LocalPlayer
+				local mainy = localplayer.PlayerGui.MainUI
+
+				if localplayer.Character.Parent.Name == "Spectating" then
+					Rayfield:Notify({
+								Title = "Error while toggling",
+								Content = "You need to be in a round for this.",
+								Duration = 5,
+								Image = "triangle-alert",
+							})
+					return
+				end
+				
+				if mainy.SettingsScreen.Visible == false then
+					mainy.SettingsScreen.Visible = true
+					mainy.SettingsScreen.Size = UDim2.new(1, -20, 1, -20)
+				else
+					mainy.SettingsScreen.Visible = false
+					mainy.SettingsScreen.Size = UDim2.new(1, -20, 0, 0)
+				end
+			end,
+		})
+
+		local ToggleMenus = QOLTab:CreateButton({
+			Name = "Toggle Player list",
+			Callback = function()
+				local localplayer = game.Players.LocalPlayer
+				local mainy = localplayer.PlayerGui.MainUI
+				local plrlist = mainy.PlayerListHolder
+
+				if localplayer.Character.Parent.Name == "Spectating" then
+					plrlist.Visible = true
+
+					plrlist.Contents.Visible = true
+
+					plrlist.Contents.Players.Visible = true
+					plrlist.Contents.Players.Position = UDim2.new(0.5, 0, 1, -7)
+					plrlist.Contents.Players.Size = UDim2.new(0.9, 0, 1, -50)
+
+					plrlist.Contents.InfoTypes.Visible = true
+					plrlist.Contents.InfoTypes.Position = UDim2.new(0.5, 0, 0, 18)
+					plrlist.Contents.InfoTypes.Size = UDim2.new(0.8, 0, 0.05, 10)
+
+					plrlist.Close.Visible = true
+
+					plrlist.Background.Visible = true
+					plrlist.Contents.Players.Active = true
+
+					plrlist.Contents.Position = UDim2.new(0.5, 0, 0.5, 0)
+					plrlist.Contents.Size = UDim2.new(1, 0, 1, 0)
+
+					plrlist.Position = UDim2.new(1, -5, 0, 5)
+					plrlist.Size = UDim2.new(0.2, 50, 0.2, 50)
+
+					--plrlist.UiAspectRatioConstraint.AspectRatio = 1.55
+
+					Rayfield:Notify({
+								Title = "Error while toggling",
+								Content = "You need to be in a round for this.",
+								Duration = 5,
+								Image = "triangle-alert",
+							})
+					return
+				end
+
+				if plrlist.Contents.Position ~= UDim2.new(0.5, -350, 0.5, 0) then
+					plrlist.Visible = true
+
+					plrlist.Contents.Visible = true
+
+					--[[plrlist.Contents.Players.Visible = true
+					plrlist.Contents.Players.Position = UDim2.new(0.5, 0, 1, -7)
+					plrlist.Contents.Players.Size = UDim2.new(0.949999988, 0, 1, -50)
+
+					plrlist.Contents.InfoTypes.Visible = true
+					plrlist.Contents.InfoTypes.Position = UDim2.new(0.5, 0, 0, 18)
+					plrlist.Contents.InfoTypes.Size = UDim2.new(0.899999976, 0, 0.0500000007, 10)
+
+					plrlist.Close.Visible = true
+
+					plrlist.Background.Visible = true
+					plrlist.Contents.Players.Active = true]]
+
+					plrlist.Contents.Position = UDim2.new(0.5, -350, 0.5, 0)
+					plrlist.Contents.Size = UDim2.new(1, 0, 1, 0)
+
+					--[[plrlist.Position = UDim2.new(1, -5, 0, 5)
+					plrlist.Size = UDim2.new(0.2, 50, 0.2, 50)]]
+
+					--plrlist.UiAspectRatioConstraint.AspectRatio = 1.55
+				else
+					--[[plrlist.Visible = false
+					plrlist.Contents.Visible = false
+					plrlist.Contents.Players.Visible = false
+					plrlist.Background.Visible = false
+					plrlist.Contents.Players.Active = false
+
+					plrlist.Contents.Position = UDim2.new(0.5, 0, 0.5, 0)
+					plrlist.Contents.Players.Position = UDim2.new(0.5, 0, 1, -7)
+					plrlist.Position = UDim2.new(1, 0, 0, 5)]]
+
+					--plrlist.Visible = true
+
+					plrlist.Contents.Visible = false
+
+					--[[plrlist.Contents.Players.Visible = true
+					plrlist.Contents.Players.Position = UDim2.new(0.5, 0, 1, -7)
+					plrlist.Contents.Players.Size = UDim2.new(0.949999988, 0, 1, -50)
+
+					plrlist.Contents.InfoTypes.Visible = true
+					plrlist.Contents.InfoTypes.Position = UDim2.new(0.5, 0, 0, 18)
+					plrlist.Contents.InfoTypes.Size = UDim2.new(0.899999976, 0, 0.0500000007, 10)
+
+					plrlist.Close.Visible = true
+
+					plrlist.Background.Visible = true
+					plrlist.Contents.Players.Active = true]]
+
+					plrlist.Contents.Position = UDim2.new(0.5, 0, 0.5, 0)
+					plrlist.Contents.Players.Position = UDim2.new(0.5, 0, 1, -7)
+
+					--[[plrlist.Position = UDim2.new(1, -5, 0, 5)
+					plrlist.Size = UDim2.new(0.2, 50, 0.2, 50)]]
+
+					--plrlist.UiAspectRatioConstraint.AspectRatio = 1.55
+				end
+			end,
+		})
+
+		QOLTab:CreateSection("you can emote as killer using this:")
+		local AnimationsTabGUI = QOLTab:CreateButton({
 			Name = "Emote As Killer GUI", 
 			Callback = function(keybind)
 				if LopticaCooldown then
@@ -1759,9 +1935,42 @@ local function ForsakextrasLoad()
 				end
 			end,
 		})
+		QOLTab:CreateSection("(WARNING: people might THINK you're a hacker and report you)")
+		QOLTab:CreateSection("(do this at MAX once and very quickly to be safe if you do)")
 
-		OthersTab:CreateSection("(WARNING: people might think you're a hacker and report you)")
-		OthersTab:CreateSection("(do this at MAX once and very quickly to be safe if you do)")
+		local VolumeSlider = QOLTab:CreateSlider({
+  			Name = "test",
+   			Range = {0.1, 10},
+   			Increment = 0.1,
+   			Suffix = "test",
+   			CurrentValue = 1,
+   			Flag = "test", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   			Callback = function(Value)
+				
+   			end,
+		})
+
+		-- Miscs Tab
+
+		MiscsTab:CreateSection("if something glitched it's better to rejoin instead")
+		local DelGui = MiscsTab:CreateButton({
+			Name = "Delete Gui",
+			CurrentValue = false,
+			Callback = function()
+				if game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI") then
+					game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI"):Destroy()
+				end
+				wait()
+				local CoreGui = game:GetService("CoreGui")
+				if CoreGui:FindFirstChild("HUI") and CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("HUI"):FindFirstChild("Rayfield"):Destroy()
+				elseif CoreGui:FindFirstChild("RobloxGui") and CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("RobloxGui"):FindFirstChild("Rayfield"):Destroy()
+				elseif CoreGui:FindFirstChild("Rayfield") then
+					CoreGui:FindFirstChild("Rayfield"):Destroy()
+				end
+			end,
+		})
 
 	end
 
