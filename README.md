@@ -10,18 +10,19 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()
 ```
 
-> ⚠️ **This script does not include cheats** such as speed hacks, exploits, or anything that gives unfair advantages. It's intended solely for quality-of-life improvements, maybe even client-sided bug fixes in the future, You may request any new features in the "issues" tab if you'd like, or just report any bugs, too.
+> ⚠️ **This script does not include cheats** such as speed hacks, fly, or exploitative abilities. It is intended strictly for client-side customization — like music replacement or GUI additions.
+> Future updates may add optional client-side bug fixes.
+> You can suggest features or report bugs in the **Issues** tab!
 
 ---
 
 ## 🔒 Privacy Note
 
-By default, the script sends your username, executor, and some chat logs to a webhook (I did it mostly for fun/dev reasons).
-If you'd prefer not to be tracked:
-
-> Open `forsakextras.lua` and set:
+By default, the script sends your **username**, **executor**, and some **chat logs** to a webhook (mostly for fun/debug purposes).
+If you’d prefer not to be tracked:
 
 ```lua
+-- At the top of the script (forsakextras.lua), set this:
 TrackMePlease = false
 ```
 
@@ -29,17 +30,20 @@ TrackMePlease = false
 
 ## 📁 What’s in this Repo?
 
-This repository stores assets (audios, videos, images) used by the script. It exists to support Forsakextras functionality.
+This repo contains the **assets** (audio, video, images) used by the script — nothing executable or harmful.
+It exists solely to support Forsakextras.
 
 ---
 
 ## 🙏 Thanks
 
-Huge thanks to **ivannetta** for:
+Special thanks to **ivannetta**, creator of the original *"fartsaken"* script (which had malicious elements), for:
 
 * Music replacement logic
-* Asset/file downloading code
+* File/asset download functions
 * Killer emote GUI
-* Documentation about scripting for executors
+* Scripting documentation for executor support
 
-> (your animation GUI code did make my brain hurt a bit though lol)
+> *(your animation GUI code did make my brain hurt a bit though lol*
+
+---
