@@ -10,7 +10,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()
 ```
 
-> ⚠️ **This script does not include cheats** such as speed hacks, exploits, or anything that gives unfair advantages. It's intended solely for quality-of-life improvements (e.g., music swapping).
+> ⚠️ **This script does not include cheats** such as speed hacks, exploits, or anything that gives unfair advantages. It's intended solely for quality-of-life improvements, maybe even client-sided bug fixes in the future, You may request any new features in the "issues" tab if you'd like, or just report any bugs, too.
 
 ---
 
