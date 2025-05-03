@@ -1,6 +1,6 @@
 # forsakextras
 
-> A **QoL script** for the Roblox game **Forsaken**, providing features like music replacement and GUI tweaks — **nothing malicious or unfair**.
+> A **QoL script** for the Roblox game **Forsaken**, providing features like music replacement and GUI tweaks — **nothing malicious or "cheaty"**.
 
 ---
 
@@ -37,7 +37,7 @@ It exists solely to support Forsakextras.
 
 ## 🙏 Thanks
 
-Special thanks to **ivannetta**, creator of the original *"fartsaken"* script (which had malicious elements), for:
+Special thanks to **ivannetta**, creator of the original *"fartsaken"* script (which had cheat elements), for:
 
 * Music replacement logic
 * File/asset download functions
