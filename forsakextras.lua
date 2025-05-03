@@ -59,6 +59,7 @@ local function ForsakextrasLoad()
 	-- flagatrons
 	local LopticaCooldown = false
 	local ReplaceStandingMusic = false
+	local Rejoined = false
 
 	-- sittings
 	local lmsmusicvolume = 1
@@ -74,6 +75,7 @@ local function ForsakextrasLoad()
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
 	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true, Xeno = true }
+	local ExecutorNameString = tostring(executorname)
 
 	task.spawn(function()
 		pcall(function()
@@ -259,7 +261,11 @@ local function ForsakextrasLoad()
 					local success, response = pcall(function()
 						local Request = http_request or syn.request or request
 
-						local messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *left the game.*" 
+						if Rejoined == true then
+							messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *is rejoining!*" 
+						else
+							messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *left the game.*" 
+						end
 
 						-- Send the message
 						local success, response = pcall(function()
@@ -1702,6 +1708,7 @@ local function ForsakextrasLoad()
 		local Rejoin = OthersTab:CreateButton({
 			Name = "Rejoin",
 			Callback = function()
+				Rejoined = true
 				game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)	
 			end,
 		})
