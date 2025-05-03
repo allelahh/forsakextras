@@ -1,13 +1,45 @@
 # forsakextras
 
-*the script:*
-**``loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()``**
-**THIS SCRIPT ONLY LETS YOU DO THINGS LIKE REPLACING LMS MUSIC, THERE IS NO ACTUAL STUFF LIKE HACKING OR SPEED CHEATS OR SMTH!**
-_IMPORTANT: if you don't want me to track your username and executor and chat logs of your session (idk why i did those i just like webhooks), just set "TrackMePlease" to "false" at the start of the script. (forsakextras.lua)_
+> A **QoL script** for the Roblox game **Forsaken**, providing features like music replacement and GUI tweaks — **nothing malicious or unfair**.
 
-Repo for assets like audios/videos/images for a **QoL script** for the Roblox game **"Forsaken"** which __**gives no advantages**__;
-and is therefore **NOT malicious** (i'm serious), and shouldn't need to be removed.
-don't worry github mods, or users
+---
 
-## additional notes:
-*- thanks ivannetta for most if not all of the file/asset downloading logic and some parts of the script about music replacement, the killer emoting gui and giving me documentation about scripting for script executors, your animation gui thingy did give me a slight stroke tho*
+## 📜 The Script
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))()
+```
+
+> ⚠️ **This script does not include cheats** such as speed hacks, exploits, or anything that gives unfair advantages. It's intended solely for quality-of-life improvements (e.g., music swapping).
+
+---
+
+## 🔒 Privacy Note
+
+By default, the script sends your username, executor, and some chat logs to a webhook (I did it mostly for fun/dev reasons).
+If you'd prefer not to be tracked:
+
+> Open `forsakextras.lua` and set:
+
+```lua
+TrackMePlease = false
+```
+
+---
+
+## 📁 What’s in this Repo?
+
+This repository stores assets (audios, videos, images) used by the script. It exists to support Forsakextras functionality.
+
+---
+
+## 🙏 Thanks
+
+Huge thanks to **ivannetta** for:
+
+* Music replacement logic
+* Asset/file downloading code
+* Killer emote GUI
+* Documentation about scripting for executors
+
+> (your animation GUI code did make my brain hurt a bit though lol)
