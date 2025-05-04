@@ -82,7 +82,7 @@ local GetKey
 local UICorner_4
 
 local SupportedVersion = 9610
-local ScriptVersion = 3.0 --suffix: X.Y where X = major part, Y is minor, example, 1X.0 is release, 2X.0 has new features, 3X.0 more features, and X.1 has bug fixes or minor additions
+local ScriptVersion = 3.1 --suffix: X.Y where X = major part, Y is minor, example, 1X.0 is release, 2X.0 has new features, 3X.0 more features, and X.1 has bug fixes or minor additions
 --i only really started tracking the version after adding and fixing bugs relating to toggling menu buttons/player list and the FOV slider and etc, so this is ver 2.3, i think
 --at least at the moment i'm writing this
 
@@ -135,6 +135,7 @@ local ScriptVersion = 3.0 --suffix: X.Y where X = major part, Y is minor, exampl
 
 	local subtitleList
 	local randomIndex
+	local LatestScriptVersion
 
 	-- ui tabbings
 	local AudioTab = nil
@@ -178,6 +179,35 @@ local function ForsakextrasLoad()
 		end
 
 		randomIndex = math.random(1, #subtitleList)
+
+
+		local success, result = pcall(function()
+			return loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/latestversion.txt"))()
+		end)
+		
+		if success and typeof(result) == "table" then
+			LatestScriptVersion = result
+		else
+			LatestScriptVersion = ScriptVersion
+		end
+
+		if LatestScriptVersion > ScriptVersion then
+			Rayfield:Notify({
+				Title = "Script Outdated",
+				Content = "You have an old version of Forsakextras!",
+				Duration = 10,
+				Image = "triangle-alert",
+			})
+			Rayfield:Notify({
+				Title = "Script Outdated",
+				Content = "Copied newest script link to clipboard.",
+				Duration = 10,
+				Image = "triangle-alert",
+			})
+			setclipboard(loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/forsakextras.lua"))())
+		end
+
+		
 
 
 	task.spawn(function()
