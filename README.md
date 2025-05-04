@@ -44,6 +44,6 @@ Special thanks to **ivannetta**, creator of the original *"fartsaken"* script (w
 * Killer emote GUI
 * Scripting documentation for executor support
 
-> *(your animation GUI code did make my brain hurt a bit though lol*
+> (your animation GUI code did make my brain hurt a bit though lol)
 
 ---
