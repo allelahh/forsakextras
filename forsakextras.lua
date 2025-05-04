@@ -24,10 +24,8 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --music for when you're at low hp and close to the killer
 --(yes, i will let players customize this too like LMS replacement!!!)
 
---vine boom when your stamina reaches 0 or you miss a swing/punch/stab/etc
---also for if you miss something as killer, obv
---(yes i will let this be a custom sound too)
---(cus it'd be really fun to have the "miss!" sfx from paper mario)
+--custom sound for when your stamina reaches 0 or/and you if miss
+--(cus it'd be really fun to have the "miss!" sfx from mario party)
 
 --sounds for successfully blocking attacks as guest
 
@@ -48,6 +46,29 @@ local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatS
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local HttpService = game:GetService("HttpService")
+
+local PlaceId = game.PlaceId
+local JobId = game.JobId
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local TextChatService = game:GetService("TextChatService")
+local TeleportService = game:GetService("TeleportService")
+
+local LocalPlayer = Players.LocalPlayer
+local PlayerData = LocalPlayer:WaitForChild("PlayerData")
+local LocalEquippedSkins = PlayerData:WaitForChild("Equipped"):WaitForChild("Skins")
+local Settings = PlayerData:WaitForChild("Settings")
+local Customization = Settings:WaitForChild("Customization")
+local HitsoundID = Customization:WaitForChild("HitsoundID")
+
+local AssetsFolderRepStorage = ReplicatedStorage:FindFirstChild("Assets")
+local soundsFolder = workspace:WaitForChild("Sounds")
+
+local HitboxesFolder = workspace:WaitForChild("Hitboxes")
+
 local KeySystem
 local Frame
 local TextBox
@@ -61,7 +82,7 @@ local GetKey
 local UICorner_4
 
 local SupportedVersion = 9610
-local ScriptVersion = 2.3 --suffix: X.Y where X = major part, Y is minor, example, 1X.0 is release, 2X.0 has new features, 3X.0 more features, and X.1 has bug fixes or minor additions
+local ScriptVersion = 3.0 --suffix: X.Y where X = major part, Y is minor, example, 1X.0 is release, 2X.0 has new features, 3X.0 more features, and X.1 has bug fixes or minor additions
 --i only really started tracking the version after adding and fixing bugs relating to toggling menu buttons/player list and the FOV slider and etc, so this is ver 2.3, i think
 --at least at the moment i'm writing this
 
@@ -78,6 +99,9 @@ local ScriptVersion = 2.3 --suffix: X.Y where X = major part, Y is minor, exampl
 	-- tablets
 	local buttonFrames = {}
 	local imageButtons = {}
+	local MusicList = {}
+	local CustomHitsoundList = {}
+	local MissSoundList = {}
 
 	-- flagatrons
 	local LopticaCooldown = false
@@ -85,19 +109,37 @@ local ScriptVersion = 2.3 --suffix: X.Y where X = major part, Y is minor, exampl
 	local Rejoined = false
 	local enableHackerDetecting = false
 
+	local CustomHitsound = false
+	local CustomHitsoundId = "Hitsound.mp3"
+	local HitsoundVolume = 1
+	
+	local MissSound = false
+	local MissSoundId = "miss.mp3"
+	local MissSoundVolume = 1
+
+	local HitboxHitColor = Color3.fromRGB(127, 255, 127)
+	local HitboxMissColor = Color3.fromRGB(255, 63, 63)
+
+	local activeHitboxes = {}
+	local hitDetected = false
+	local swingInProgress = false
+
+	local MusicConnections = {}
+	local CurrentMusic = "None"
+	local lmsmusicvolume = 1
+
+	--sittings
+	local timetocallmiss = 1
+	local misssoundcooldowntime = 5
+	local misssoundcooldown = false
+
 	local subtitleList
 	local randomIndex
 
-	-- sittings
-	local lmsmusicvolume = 1
-
 	-- ui tabbings
-	local MusicTab = nil
-	local AnimationsTab = nil
-
-	local MusicConnections = {}
-	local CurrentSound = "None"
-
+	local AudioTab = nil
+	local QOLTab = nil
+	local MiscsTab = nil
 
 local function ForsakextrasLoad()
 	-- roblox services that i dont need and totaly never use
@@ -197,7 +239,7 @@ local function ForsakextrasLoad()
 					 - Happy scripting! :)
 					]]
 
-					-- // Configuration
+					-- // Config
 					local Waittime = 5
 					
 					-- // Services
@@ -331,9 +373,9 @@ local function ForsakextrasLoad()
 						local Request = http_request or syn.request or request
 
 						if Rejoined == true then
-							messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *is rejoining!*" 
+							messageContent = "*The user* **"..Username.."** ||("..UserId..")|| *is rejoining!*" 
 						else
-							messageContent = "*The user* **"..Username.."** ||()"..UserId..")|| *left the game.*" 
+							messageContent = "*The user* **"..Username.."** ||("..UserId..")|| *left the game.*" 
 						end
 
 						-- Send the message
@@ -404,10 +446,6 @@ local function ForsakextrasLoad()
 		end
 	end)
 
-	local MusicList = {
-		
-	}
-
 	local GUI = Rayfield:CreateWindow({
 		Name = "Forsakextras",
 		Theme = "Default",
@@ -418,6 +456,7 @@ local function ForsakextrasLoad()
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
+		ConfigurationSaving = false,
 
 		KeySystem = true,
 		KeySettings = {
@@ -1240,7 +1279,7 @@ local function ForsakextrasLoad()
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
 							if name then
-								table.insert(NameProtectNames, name)
+								--table.insert(NameProtectNames, name)
 							end
 						end
 					end
@@ -1264,7 +1303,9 @@ local function ForsakextrasLoad()
 			else
 				Rayfield:Notify({ Title = "Downloaded", Content = path, Duration = 1, Image = "download" })
 			end
-			--writefile(path, res)
+			if suc then
+				writefile(path, res)
+			end
 		end
 	end
 	local function CheckIfStuffsDownloaded()
@@ -1303,6 +1344,14 @@ local function ForsakextrasLoad()
 		end
 	end
 
+	local function insertHolderToTable(tableval:table)
+		local holder = Instance.new("Pants")
+		holder.Parent = game.CoreGui
+		table.insert(tableval, holder)
+	end
+
+	insertHolderToTable(activeHitboxes)
+
 	local function LastStandingReplacement(state)
 		ReplaceStandingMusic = state
 		local LastStandingFolder = workspace.Themes
@@ -1310,7 +1359,7 @@ local function ForsakextrasLoad()
 			if LastStandingFolder then
 				local connection = LastStandingFolder.ChildAdded:Connect(function(child)
 					if child:IsA("Sound") and child.Name == "LastSurvivor" then
-						child.SoundId = getcustomasset("Forsakextras/Assets/LastStandingMusic/" .. tostring(CurrentSound))
+						child.SoundId = getcustomasset("Forsakextras/Assets/LastStandingMusic/" .. tostring(CurrentMusic))
 						child.TimePosition = 0
 						child.Volume = lmsmusicvolume
 					end
@@ -1352,6 +1401,123 @@ local function ForsakextrasLoad()
 		end
 	end
 
+	local function replaceHitsound(sound)
+  		if sound:IsA("Sound") and sound.SoundId == "rbxassetid://" .. HitsoundID.Value --[[and LocalPlayer.Character.Parent.Name == "Survivors"]] then
+        	local newSoundId = getcustomasset("Forsakextras/Assets/CustomHitsounds/" .. tostring(CustomHitsoundId))
+ 	    	sound.SoundId = newSoundId
+			sound.Volume = HitsoundVolume
+			sound.TimePosition = 0
+    	end
+	end
+
+	soundsFolder.ChildAdded:Connect(function(child)
+    	if child:IsA("Sound") then
+			if CustomHitsound == true then
+        		replaceHitsound(child)
+			end
+    	end
+	end)
+
+	HitboxesFolder.ChildAdded:Connect(function(child)
+		print(child.Name)
+		if --[[child:IsA("Part") and]] child.Name == Players.LocalPlayer.Name.."Hitbox" then
+			table.insert(activeHitboxes, child)
+			hitDetected = false
+			swingInProgress = true
+	
+			local connection
+			local startTime = os.clock() -- capture the time when the hitbox appears
+
+			connection = RunService.Heartbeat:Connect(function()
+				if not child:IsDescendantOf(workspace) then
+					print("disconnecting connection and returning")
+					connection:Disconnect()
+					return
+				end
+
+				if child.Color == HitboxHitColor then
+					hitDetected = true
+				end
+
+				if hitDetected == false --[[and swingInProgress == true]] and os.clock() - startTime >= timetocallmiss and misssoundcooldown == false then
+					misssoundcooldown = true
+					task.delay(misssoundcooldowntime, function()
+						misssoundcooldown = false
+					end)
+					
+					hitDetected = true -- mark it as handled so it doesn't trigger again
+					startTime = os.clock()
+					
+					print("miss detected ("..timetocallmiss.." secs)")
+
+					connection:Disconnect()
+					task.spawn(function()
+						for i = #activeHitboxes, 1, -1 do
+							table.remove(activeHitboxes, i)
+						end
+					end)
+
+					--swingInProgress = false
+
+					if MissSound == true then
+						MissSound = not MissSound
+						local NewSoundId = getcustomasset("Forsakextras/Assets/MissSounds/" .. tostring(MissSoundId))
+						local NewVolume = MissSoundVolume
+						local sadgasdg = Instance.new("Sound")
+						sadgasdg.Parent = soundsFolder
+						sadgasdg.SoundId = NewSoundId
+						sadgasdg.Volume = NewVolume or 1
+						sadgasdg.TimePosition = 0
+				
+						sadgasdg:Play()
+
+						--task.wait()
+						task.delay(15, function()
+							sadgasdg:Destroy()
+						end)
+						MissSound = not MissSound
+					end
+					return
+				end
+			end)
+
+		end
+	end)
+
+	RunService.Heartbeat:Connect(function()
+		for i = #activeHitboxes, 1, -1 do
+			if not activeHitboxes[i]:IsDescendantOf(workspace) then
+				table.remove(activeHitboxes, i)
+
+				--insertHolderToTable(activeHitboxes)
+			end
+		end
+
+		if swingInProgress == true and #activeHitboxes == 0 then
+			swingInProgress = false
+
+			if hitDetected == false and MissSound == true then
+				MissSound = not MissSound
+				print("miss detected")
+				local NewSoundId = getcustomasset("Forsakextras/Assets/MissSounds/" .. tostring(MissSoundId))
+				local NewVolume = MissSoundVolume
+				local sadgasdg = Instance.new("Sound")
+				sadgasdg.Parent = soundsFolder
+				sadgasdg.SoundId = NewSoundId
+				sadgasdg.Volume = NewVolume or 1
+				sadgasdg.TimePosition = 0
+				
+				sadgasdg:Play()
+
+				--task.wait()
+				task.delay(15, function()
+					sadgasdg:Destroy()
+				end)
+				MissSound = not MissSound
+			end
+		end
+	end)
+
 	Rayfield:Notify({
 		Title = supportedExecutors[executorname] and executorname .. " Executor Supported"
 			or executorname .. " Executor Not Supported",
@@ -1360,39 +1526,6 @@ local function ForsakextrasLoad()
 		Image = supportedExecutors[executorname] and "check" or "ban",
 		Duration = 5,
 	})
-
-	local function Do1x1x1x1Popups()
-		while true do
-			if Do1x1PopupsLoop then
-				local player = game:GetService("Players").LocalPlayer
-				local popups = player.PlayerGui.TemporaryUI:GetChildren()
-
-				for _, i in ipairs(popups) do
-					if i.Name == "1x1x1x1Popup" then
-						local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
-						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2) + 50
-						--[[VIM:SendMouseButtonEvent(
-							centerX,
-							centerY,
-							Enum.UserInputType.MouseButton1.Value,
-							true,
-							player.PlayerGui,
-							1
-						)
-						VIM:SendMouseButtonEvent(
-							centerX,
-							centerY,
-							Enum.UserInputType.MouseButton1.Value,
-							false,
-							player.PlayerGui,
-							1
-						)]]
-					end
-				end
-			end
-			task.wait(0.1)
-		end
-	end
 
 	local function GeneratorOnce()
 		local StuffIngameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
@@ -1598,39 +1731,55 @@ local function ForsakextrasLoad()
 			end
 		end)
 	end
- 
-	local function updateMusicList()
+
+	local function updateFileList(foldername: string, list: table)
 		local existingFiles = {}
-			for _, music in ipairs(listfiles("Forsakextras/Assets/LastStandingMusic")) do
-				print(music)
-				if string.find(music, "mp3") then
-					local name = string.gsub(music, "^.*/", "")  -- removes everything up to the last '/'
+			for _, audio in ipairs(listfiles("Forsakextras/Assets/"..foldername)) do
+				print(audio)
+				if string.find(audio, "mp3") then
+					local name = string.gsub(audio, "^.*/", "")  -- removes everything up to the last '/'
 					print(name)  --> muisic,mp3
 					if name then
 						existingFiles[name] = true
 						local found = false
-						for _, tablemusic in ipairs(MusicList) do
-							if tablemusic == name then
+						for _, tableaudio in ipairs(list) do
+							if tableaudio == name then
 								found = true
 								break
 							end
 						end
 						if not found then
-							table.insert(MusicList, name)
+							table.insert(list, name)
 						end
 					end
 				end
 			end
 
-			-- Remove any music from MusicList that's not in existingFiles
-			for i = #MusicList, 1, -1 do
-				if not existingFiles[MusicList[i]] then
-					table.remove(MusicList, i)
+			-- Remove any audio from the list that's not in existingFiles
+			for i = #list, 1, -1 do
+				if not existingFiles[list[i]] then
+					table.remove(list, i)
 				end
 			end
 	end
 
+	local function updateMusicList()
+		updateFileList("LastStandingMusic", MusicList)
+	end
+
+	local function updateHitsoundList()
+		updateFileList("CustomHitsounds", CustomHitsoundList)
+	end
+
+	local function updateMissSoundList()
+		updateFileList("MissSounds", MissSoundList)
+	end
+
 	updateMusicList()
+
+	updateHitsoundList()
+
+	updateMissSoundList()
 
 	local function CreateFishFrame()
 		local visible = true
@@ -1680,7 +1829,7 @@ local function ForsakextrasLoad()
 	end
 	
 	local function InitializeGUI()
-		MusicTab = GUI:CreateTab("Music", "music")
+		AudioTab = GUI:CreateTab("Audio", "music")
 		QOLTab = GUI:CreateTab("Quality-of-Life", "award")
 		MiscsTab = GUI:CreateTab("Misc", "ghost")
 
@@ -1701,27 +1850,29 @@ local function ForsakextrasLoad()
 		})
 
 
-		-- Music Tab
+		-- Audio Tab
 
-		MusicTab:CreateSection("music replacement :O")
+		AudioTab:CreateSection("music replacement :O")
 
-		local MusicDropdown = MusicTab:CreateDropdown({
+		local MusicDropdown = AudioTab:CreateDropdown({
 			Name = "Music List",
-			Options = MusicList,
+			Options = {},
 			CurrentOption = "Bonetrousle.mp3",
+			Flag = "ChosenMusic",
 			MultiSelection = false,
 			Callback = function(OptionChosen)
-				CurrentSound = OptionChosen[1]
-				print(CurrentSound)
+				CurrentMusic = OptionChosen[1]
+				print(CurrentMusic)
 				if ReplaceStandingMusic then
-					ChangeMusic(CurrentSound)
+					ChangeMusic(CurrentMusic)
 				end
 			end,
 		})
 
-		MusicTab:CreateSection("you can press the button below")
-		local RefreshButton = MusicTab:CreateButton({
-			Name = "Refresh music list", 
+		AudioTab:CreateSection("to see ur custom audios on the list; add them to")
+		AudioTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/LastStandingMusic")
+		local RefreshButton = AudioTab:CreateButton({
+			Name = "Refresh music list",
 			Callback = function(keybind)
 				updateMusicList()
 				task.wait()
@@ -1730,10 +1881,9 @@ local function ForsakextrasLoad()
 				end
 			end,
 		})
-		MusicTab:CreateSection("to see ur custom mp3s on the list; add them to")
-		MusicTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/LastStandingMusic")
+		AudioTab:CreateSection("and press the button above")
 
-		local VolumeSlider = MusicTab:CreateSlider({
+		local VolumeSlider = AudioTab:CreateSlider({
   			Name = "Music Volume",
    			Range = {0.1, 10},
    			Increment = 0.1,
@@ -1744,24 +1894,143 @@ local function ForsakextrasLoad()
 				lmsmusicvolume = Value
 
 				if ReplaceStandingMusic then
-					ChangeMusic(CurrentSound, lmsmusicvolume)
+					ChangeMusic(CurrentMusic, lmsmusicvolume)
 				end
    			end,
 		})
 
-		local MusicToggle = MusicTab:CreateToggle({
+		local MusicToggle = AudioTab:CreateToggle({
 			Name = "Replace Last Standing Music",
 			CurrentValue = false,
    			Flag = "ReplaceLMSToggle",
 			Callback = function(state)
-				print(CurrentSound)
-				if CurrentSound == ("???" or "empty" or nil) then return end
+				print(CurrentMusic)
+				if CurrentMusic == ("???" or "empty" or nil) then return end
 				LastStandingReplacement(state)
 				if ReplaceStandingMusic then
-					ChangeMusic(CurrentSound)
+					ChangeMusic(CurrentMusic)
 				end
 			end,
 		})
+
+		local AudioDivider1 = AudioTab:CreateDivider()
+
+		AudioTab:CreateSection("custom hitsounds?!")
+
+		local HitsoundDropdown = AudioTab:CreateDropdown({
+			Name = "Hitsound List",
+			Options = {},
+			CurrentOption = "Hitsound.mp3",
+			Flag = "ChosenHitsound",
+			MultiSelection = false,
+			Callback = function(OptionChosen)
+				CustomHitsoundId = OptionChosen[1]
+				print(CustomHitsoundId)
+			end,
+		})
+
+		AudioTab:CreateSection("to see ur custom audios on the list; add them to")
+		AudioTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/CustomHitsounds")
+		local HitsoundRefreshButton = AudioTab:CreateButton({
+			Name = "Refresh Hitsound list", 
+			Callback = function(keybind)
+				updateHitsoundList()
+				task.wait()
+				for _, hitsound in ipairs(CustomHitsoundList) do
+					HitsoundDropdown:Refresh(CustomHitsoundList)
+				end
+			end,
+		})
+		AudioTab:CreateSection("and press the button above")
+
+		local HitsoundVolumeSlider = AudioTab:CreateSlider({
+  			Name = "Hitsound Volume",
+   			Range = {0.1, 10},
+   			Increment = 0.1,
+   			Suffix = "Hit Volume",
+   			CurrentValue = 1,
+   			Flag = "CustomHitsoundVolume", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   			Callback = function(Value)
+				HitsoundVolume = Value
+   			end,
+		})
+
+		local HitsoundToggle = AudioTab:CreateToggle({
+			Name = "Custom Hitsound",
+			CurrentValue = false,
+   			Flag = "CustomHitsoundToggle",
+			Callback = function(state)
+				print(CustomHitsoundId)
+				if CustomHitsoundId == ("???" or "empty" or nil) then return end
+				CustomHitsound = state
+			end,
+		})
+		AudioTab:CreateSection("if it doesn't work, try setting a hitsound ID in")
+		AudioTab:CreateSection("forsaken settings, it can even be '12345'")
+
+		local AudioDivider2 = AudioTab:CreateDivider()
+
+		AudioTab:CreateSection("-- FUNNY AUDIO SECTION --")
+
+		local AudioDivider2 = AudioTab:CreateDivider()
+
+		AudioTab:CreateSection("miss sounds, my oh my!!!")
+		AudioTab:CreateSection("(warning: kinda glitchy as 1x4 or coolkid)")
+
+		local MissSoundDropdown = AudioTab:CreateDropdown({
+			Name = "Miss Sound List",
+			Options = {},
+			CurrentOption = "miss.mp3",
+			Flag = "ChosenMissSound",
+			MultiSelection = false,
+			Callback = function(OptionChosen)
+				MissSoundId = OptionChosen[1]
+				print(MissSoundId)
+			end,
+		})
+
+		AudioTab:CreateSection("to see ur custom audios on the list; add them to")
+		AudioTab:CreateSection(ExecutorNameString.."/workspace/Forsakextras/Assets/MissSounds")
+		local MissSoundRefreshButton = AudioTab:CreateButton({
+			Name = "Refresh Miss Sound list", 
+			Callback = function(keybind)
+				updateMissSoundList()
+				task.wait()
+				for _, miss in ipairs(MissSoundList) do
+					MissSoundDropdown:Refresh(MissSoundList)
+				end
+			end,
+		})
+		AudioTab:CreateSection("and press the button above")
+
+		local MissSoundVolumeSlider = AudioTab:CreateSlider({
+  			Name = "Miss Sound Volume",
+   			Range = {0.1, 10},
+   			Increment = 0.1,
+   			Suffix = "Miss Volume",
+   			CurrentValue = 1,
+   			Flag = "MissSoundVolumeFlag", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   			Callback = function(Value)
+			   	print(Value)
+				MissSoundVolume = Value
+				task.wait()
+				print(MissSoundVolume)
+   			end,
+		})
+
+		local MissSoundToggle = AudioTab:CreateToggle({
+			Name = "Enable Miss Sound",
+			CurrentValue = false,
+   			Flag = "MissSoundToggle",
+			Callback = function(state)
+				print(MissSoundId)
+				if MissSoundId == ("???" or "empty" or nil) then return end
+				MissSound = state
+			end,
+		})
+		AudioTab:CreateSection("if it doesn't work, that's a glitch")
+		AudioTab:CreateSection("report it to me and check F9 for any errors 💔")
+
 
 		-- QOL Tab
 
@@ -2132,12 +2401,18 @@ else
 	ForsakextrasLoad()
 end
 
---Rayfield:LoadConfiguration()
+Rayfield:LoadConfiguration()
 
 
 --vim template for vip commands stuff:
---[[
-if i.Name == "1x1x1x1Popup" then
+--[[local function Do1x1x1x1Popups()
+		while true do
+			if Do1x1PopupsLoop then
+				local player = game:GetService("Players").LocalPlayer
+				local popups = player.PlayerGui.TemporaryUI:GetChildren()
+
+				for _, i in ipairs(popups) do
+					if i.Name == "1x1x1x1Popup" then
 						local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
 						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2) + 50
 						VIM:SendMouseButtonEvent(
@@ -2157,4 +2432,8 @@ if i.Name == "1x1x1x1Popup" then
 							1
 						)
 					end
-]]
+				end
+			end
+			task.wait(0.1)
+		end
+	end]]
