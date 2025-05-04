@@ -17,7 +17,21 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --or storing commands (this is for vip server owners)
 --or like letting people do ":survivor (name)" and basically
 --give other people admin access
---there has to be SOME way, right?
+--how do you do this? well, i have a little snipped of VIM code to be able to
+--click the buttons to do the exact admin stuff in a pinch very quickly
+--and barely affecting gameplay, um, hopefully,
+
+--music for when you're at low hp and close to the killer
+--(yes, i will let players customize this too like LMS replacement!!!)
+
+--vine boom when your stamina reaches 0 or you miss a swing/punch/stab/etc
+--also for if you miss something as killer, obv
+--(yes i will let this be a custom sound too)
+--(cus it'd be really fun to have the "miss!" sfx from paper mario)
+
+--sounds for successfully blocking attacks as guest
+
+--death sounds
 --== ^ planned ^ ==--
 
 
@@ -2113,3 +2127,28 @@ else
 end
 
 --Rayfield:LoadConfiguration()
+
+
+--vim template for vip commands stuff:
+--[[
+if i.Name == "1x1x1x1Popup" then
+						local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
+						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2) + 50
+						VIM:SendMouseButtonEvent(
+							centerX,
+							centerY,
+							Enum.UserInputType.MouseButton1.Value,
+							true,
+							player.PlayerGui,
+							1
+						)
+						VIM:SendMouseButtonEvent(
+							centerX,
+							centerY,
+							Enum.UserInputType.MouseButton1.Value,
+							false,
+							player.PlayerGui,
+							1
+						)
+					end
+]]
