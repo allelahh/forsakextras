@@ -32,6 +32,12 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --sounds for successfully blocking attacks as guest
 
 --death sounds
+
+--new voicelines for survivors/characters
+--example: the voicelines in the assets/customvoicelines folder
+--and more to come
+
+--new LMS themes if you don't have LMS replacement on (that one will take priority over this one)
 --== ^ planned ^ ==--
 
 
