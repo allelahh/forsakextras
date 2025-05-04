@@ -1,22 +1,33 @@
 local DebugNotifications = false
 local TrackMePlease = true --turn this off if you dont want me to know ur username and executor, etc
 --this also logs chat messages from your session/server/game whatever ud like to call it
---cus why not
---u can turn it off anyway-
 
---planned:
---max zoom distance
 
---random names so i can set debug people with a table and in a better way later on and more efficiently
-if game.Players.LocalPlayer.Name == ("allelahh" or "mMigueLl161109" or "dropier_h" or "guccipranc") then
-	DebugNotifications = true
-end
+--== V planned V ==--
+--generator videos
 
+--multiple hitsounds (random ones get chosen)
+--OR
+--custom hitsounds from your computer like last man standing music
+
+--checking script version on github (https://github.com/allelahh/forsakextras/blob/main/latestversion.txt)
+--and giving the user a notif abt it (maybe)
+
+--some way of setting multiple potion effects onto people
+--or storing commands (this is for vip server owners)
+--or like letting people do ":survivor (name)" and basically
+--give other people admin access
+--there has to be SOME way, right?
+--== ^ planned ^ ==--
+
+
+if game.PlaceId ~= 18687417158 then return end
 local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
 local isLegacyChat = TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
+local HttpService = game:GetService("HttpService")
 local KeySystem
 local Frame
 local TextBox
@@ -30,19 +41,49 @@ local GetKey
 local UICorner_4
 
 local SupportedVersion = 9610
+local ScriptVersion = 2.3 --suffix: X.Y where X = major part, Y is minor, example, 1X.0 is release, 2X.0 has new features, 3X.0 more features, and X.1 has bug fixes or minor additions
+--i only really started tracking the version after adding and fixing bugs relating to toggling menu buttons/player list and the FOV slider and etc, so this is ver 2.3, i think
+--at least at the moment i'm writing this
+
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
 -- naaaa it doesnt.... this is totally very readable
 -- just Some of The Jokes should tHough..... -allela
-if game.PlaceId ~= 18687417158 then return end
+
+
+	local FishData
+	local vlkhjb
+
+	-- tablets
+	local buttonFrames = {}
+	local imageButtons = {}
+
+	-- flagatrons
+	local LopticaCooldown = false
+	local ReplaceStandingMusic = false
+	local Rejoined = false
+	local enableHackerDetecting = false
+
+	local subtitleList
+	local randomIndex
+
+	-- sittings
+	local lmsmusicvolume = 1
+
+	-- ui tabbings
+	local MusicTab = nil
+	local AnimationsTab = nil
+
+	local MusicConnections = {}
+	local CurrentSound = "None"
+
 
 local function ForsakextrasLoad()
 	-- roblox services that i dont need and totaly never use
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
 	local RunService = game:GetService("RunService")
-	local HttpService = game:GetService("HttpService")
 	local VIM = game:GetService("VirtualInputManager")
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -57,35 +98,32 @@ local function ForsakextrasLoad()
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
 
-	local FishData
-	local vlkhjb
-
-	-- tablets
-	local buttonFrames = {}
-	local imageButtons = {}
-
-	-- flagatrons
-	local LopticaCooldown = false
-	local ReplaceStandingMusic = false
-	local Rejoined = false
-
-	-- sittings
-	local lmsmusicvolume = 1
-
-	-- ui tabbings
-	local MusicTab = nil
-	local AnimationsTab = nil
-
-	local MusicConnections = {}
-	local CurrentSound = "None"
-
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
 	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true, Xeno = true }
 	local ExecutorNameString = tostring(executorname)
 
+
+		local success, result = pcall(function()
+			return loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras/refs/heads/main/subtitlechoices.txt"))()
+		end)
+		
+		if success and typeof(result) == "table" then
+			subtitleList = result
+		else
+			subtitleList = {"how do i tell you about this, uhh..."}
+		end
+
+		randomIndex = math.random(1, #subtitleList)
+
+
 	task.spawn(function()
+		--random names so i can set debug people with a table and in a better way later on and more efficiently
+		if game.Players.LocalPlayer.Name == ("allelahh" or "mMigueLl161109" or "dropier_h" or "guccipranc") then
+			DebugNotifications = true
+		end
+
 		pcall(function()
 			if TrackMePlease == true then
 
@@ -353,8 +391,8 @@ local function ForsakextrasLoad()
 	local GUI = Rayfield:CreateWindow({
 		Name = "Forsakextras",
 		Theme = "Default",
-		LoadingTitle = "forsaken: quality of life",
-		LoadingSubtitle = "best script ever!!!!!",
+		LoadingTitle = "forsakextras v"..ScriptVersion,
+		LoadingSubtitle = subtitleList[randomIndex],
 		Icon = "fan",
 		Link = "https://github.com/allelahh/forsakextras/blob/main/forsakextras.lua",
 
@@ -1342,11 +1380,18 @@ local function ForsakextrasLoad()
 		if StuffNapFolder then
 			for _, g in ipairs(StuffNapFolder:GetChildren()) do
 				if g.Name == "Generator" and g.Progress.Value < 100 then
-					g.Remotes.RE:FireServer()
+					if generatorCooldown == false then
+						g.Remotes.RE:FireServer()
+					end
 				end
 			end
 		end
-	end
+	end --i'll see if i remove this later but maybe i can do smth with it
+	--cus, for me for example, my mouse is broken in a way where dragging things is a PAIN
+	--because it just spam clicks whenever i try dragging smth for some reason??
+	--so i can't really do generators rn
+	--and im telling u i def can, and pretty fast, i have 11 days im not new or smth (not trying to flex srry in advance 💔)
+	--this is the only reason
 
 	local function NotifyForsakextrasers(Player)
 		local character = Player.Character
@@ -1359,12 +1404,14 @@ local function ForsakextrasLoad()
 			not table.find(CheckedPlayers, Player.Name)
 			and Player.Name ~= game:GetService("Players").LocalPlayer.Name
 		then
-			Rayfield:Notify({
-				Title = Player.Name .. " Is Using Exploits.",
-				Content = ("(fart/saken as in-game pronouns)"),
-				Duration = 20,
-				Image = "angry",
-			})
+			if enableHackerDetecting == true then
+				Rayfield:Notify({
+					Title = Player.Name .. " Is 'Hacking'.",
+					Content = ("(Fart/Saken as in-game pronouns)"),
+					Duration = 20,
+					Image = "angry",
+				})
+			end
 			table.insert(CheckedPlayers, Player.Name)
 		end
 
@@ -1978,7 +2025,6 @@ local function ForsakextrasLoad()
 		MiscsTab:CreateSection("if something glitched it's better to rejoin instead")
 		local DelGui = MiscsTab:CreateButton({
 			Name = "Delete Gui",
-			CurrentValue = false,
 			Callback = function()
 				if game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI") then
 					game:GetService("CoreGui"):FindFirstChild("ForsakextrasEmoteGUI"):Destroy()
@@ -1992,6 +2038,14 @@ local function ForsakextrasLoad()
 				elseif CoreGui:FindFirstChild("Rayfield") then
 					CoreGui:FindFirstChild("Rayfield"):Destroy()
 				end
+			end,
+		})
+
+		local DetectHackers = MiscsTab:CreateToggle({
+			Name = "Toggle 'hacker' detector",
+			CurrentValue = false,
+			Callback = function(state)
+				enableHackerDetecting = state
 			end,
 		})
 
