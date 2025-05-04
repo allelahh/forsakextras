@@ -13,6 +13,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/allelahh/forsakextras
 > ⚠️ **This script does not include cheats** such as speed hacks, fly, or exploitative abilities. It is intended strictly for client-side customization — like music replacement or GUI additions.
 > Future updates may add optional client-side bug fixes.
 > You can suggest features or report bugs in the **Issues** tab!
+>
+> **If you like this script, consider [starring the repo](https://github.com/allelahh/forsakextras) or sharing it around (with proper credit, please!)** — it helps a lot!
 
 ---
 
@@ -44,6 +46,4 @@ Special thanks to **ivannetta**, creator of the original *"fartsaken"* script (w
 * Killer emote GUI
 * Scripting documentation for executor support
 
-> (your animation GUI code did make my brain hurt a bit though lol)
-
----
+> (ur animation gui code did make my brain hurt a bit tho lol)
