@@ -1,14 +1,16 @@
 local DebugNotifications = false
-local TrackMePlease = true --turn this off if you dont want me to know ur username and executor, etc
+local TrackMePlease = false --turn this off if you dont want me to know ur username and executor, etc
 --this also logs chat messages from your session/server/game whatever ud like to call it
-
+--UPDATE: someone deleted the webhook LOL-
+--that took a WHILE to happen but it was coming, idk how else im gonna do that so ill just leave it
+--on false for now
+--(btw this did NOT track ur personal info or anything like i said,
+--just server data and ur executor, player username and things like that)
 
 --== V planned V ==--
 --generator videos
 
 --multiple hitsounds (random ones get chosen)
---OR
---custom hitsounds from your computer like last man standing music
 
 --checking script version on github (https://github.com/allelahh/forsakextras/blob/main/latestversion.txt)
 --and giving the user a notif abt it (maybe)
@@ -17,7 +19,7 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --or storing commands (this is for vip server owners)
 --or like letting people do ":survivor (name)" and basically
 --give other people admin access
---how do you do this? well, i have a little snipped of VIM code to be able to
+--how do you do this? well, i have a little snippet of VIM code to be able to
 --click the buttons to do the exact admin stuff in a pinch very quickly
 --and barely affecting gameplay, um, hopefully,
 
@@ -35,7 +37,7 @@ local TrackMePlease = true --turn this off if you dont want me to know ur userna
 --example: the voicelines in the assets/customvoicelines folder
 --and more to come
 
---new LMS themes if you don't have LMS replacement on (that one will take priority over this one)
+--new LMS themes if you don't have LMS replacement on (that one will take priority over this planned one)
 --== ^ planned ^ ==--
 
 
